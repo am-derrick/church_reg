@@ -8,4 +8,4 @@ def registration_view(request):
         # to-do: handle form submission logic
         pass
     
-    return render(request, 'members/registration.html')
+    return render(request, 'registration.html')

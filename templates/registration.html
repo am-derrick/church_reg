@@ -2,169 +2,123 @@
 
 {% block title %}Registration Form{% endblock %}
 
-{%block content %}
+{% block content %}
 <div class="container">
-    <div class="row">
-    <div class="col-lg-10">
-        <h1 class="mb-3">Manifest Kenya Registration Form</h1>
-        <p>
-        This is an online registration form for members who are attending the
-        Physical Livestream Centre for Manifest Kenya, Nairobi.
-        </p>
-        <form action="/" method="post">
-        {{ form.hidden_tag() }}
-        <div class="row">
-            <div class="col">
-            <label for="first_name" class="form-label">First name</label>
-            <p>{{ form.first_name }}</p>
+    <div class="row justify-content-center">
+        <div class="col-lg">
+            <div class="text-center my-4">
+                <img src="/Users/ampir/Development/church_registration/static/images/logo-01.png" alt="Manifest Fellowship Kenya Logo" class="img-fluid" width="150">
+                <h1 class="mt-3 font-weight-bold">REGISTRATION FORM</h1>
             </div>
-            <div class="col">
-            <label for="last_name" class="form-label">Last name</label>
-            <p>{{ form.last_name }}
-            </div>
-        </div>
+            <p class="text-center mb-4">
+                This is an online registration form for members who are attending the
+                Physical Livestream Centre for Manifest Kenya, Nairobi.
+            </p>
 
-        <div>
-            <label for="gender">Gender</label><br />
-            <input type="radio" id="male" name="gender" value="male" required />
-            <label for="male">Male</label>
-            <input type="radio" id="female" name="gender" value="female" />
-            <label for="female">Female</label><br />
-        </div>
+            <form action="/" method="post" class="p-4">
+                <!-- Name Section -->
+                <div class="form-group row">
+                    <label for="first_name" class="col-sm-2 col-form-label font-weight-bold">Name</label>
+                    <div class="col-sm-5">
+                        <input type="text" id="first_name" name="first_name" class="form-control" placeholder="First" required>
+                    </div>
+                    <div class="col-sm-5">
+                        <input type="text" id="last_name" name="last_name" class="form-control" placeholder="Last" required>
+                    </div>
+                </div>
 
-        <label for="phone_number" class="form-label">Phone Number</label>
-        <p>{{ form.phone_number }}</p>
-        
-        <label for="residence" class="form-label">Residence</label>
-        <p>{{ form.residence }}</p>
+                <!-- Gender Section -->
+                <div class="form-group row">
+                    <label for="gender" class="col-sm-2 col-form-label font-weight-bold">Gender</label>
+                    <div class="col-sm-5">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="gender" id="male" value="male" required>
+                            <label class="form-check-label" for="male">Male</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="gender" id="female" value="female">
+                            <label class="form-check-label" for="female">Female</label>
+                        </div>
+                    </div>
+                </div>
 
-        <label>Are you serving with us?</label><br />
-        <input
-            type="radio"
-            id="serving_yes"
-            name="serving"
-            value="yes"
-        />
-        <label for="serving_yes">Yes</label>
-        <input type="radio" id="serving_no" name="serving" value="no" />
-        <label for="serving_no">No</label><br />
-        <div id="teams" style="display: none">
-            <h3>Manifest Kenya Serving Team</h3>
-            <h5>Please select the department you are serving under.</h5>
-            <label>Department</label><br />
-            <input type="radio" id="administration" name="team" value="administration" required />
-            <label for="administration">Administration</label><br />
-            <input type="radio" id="welfare" name="team" value="welfare" />
-            <label for="welfare">Welfare</label>
-            <input type="radio" id="communications" name="team" value="communications" />
-            <label for="communications">Communications</label><br />
-            <input type="radio" id="missions" name="team" value="missions" />
-            <label for="missions">Missions and Outreach</label>
-            <input type="radio" id="operations" name="team" value="operations" />
-            <label for="operation">Operations</label><br />
-            <input type="radio" id="legal" name="team" value="legal" />
-            <label for="legal">Legal</label>
-            <input type="radio" id="finance" name="team" value="finance" />
-            <label for="finance">Finance</label><br />
-        </div>
+                <!-- Phone Section -->
+                <div class="form-group">
+                    <label for="phone_number" class="font-weight-bold">Phone Number</label>
+                    <input type="text" id="phone_number" name="phone_number" class="form-control" placeholder="Preferrably a number on WhatsApp" required>
+                </div>
 
-        <label>Are you a student?</label><br />
-        <input
-            type="radio"
-            id="student_yes"
-            name="student"
-            value="yes"
-        />
-        <label for="student_yes">Yes</label>
-        <input type="radio" id="student_no" name="student" value="no" />
-        <label for="student_no">No</label><br />
-        <div id="institution" style="display: none">
-            <h4>Institution Information</h4>
-            <div class="row">
-            <div class="col">
-                <label for="institution_name" class="form-label">Name of Institution</label>
-                <p>{{ form.institution_name }}<p>
-            </div>
-            <div class="col">
-                <label for="institution_location" class="form-label">Location of Institution</label>
-                <p>{{ form.institution_location}}
-            </div>
-            </div>
-        </div>
+                <!-- Residence -->
+                <div class="form-group">
+                    <label for="residence" class="font-weight-bold">Residence</label>
+                    <input type="text" id="residence" name="residence" class="form-control" placeholder="This is where you currently live i.e. City, Town, Estate, etc." required>
+                </div>
 
-        <label>Is this your first time?</label><br />
-        <input
-            type="radio"
-            id="first_time_yes"
-            name="first_time"
-            value="yes"
-            required
-        />
-        <label for="first_time_yes">Yes</label>
-        <input type="radio" id="first_time_no" name="first_time" value="no" />
-        <label for="first_time_no">No</label><br />
-        <h3>DATA PROTECTION NOTICE</h3>
-        <p>
-            Manifest Fellowship would like to hold and use the information you
-            have provided in this form for the purposes set out below:
-        </p>
-        <ol type="1">
-            <li>
-            To keep you informed of events, services, and other related
-            communication from the ministry.
-            </li>
-            <li>
-            To share your contact details with our teams for experience sharing
-            with the ministry.
-            </li>
-            <li>
-            To use your photograph(s) and video(s) taken during any of our
-            events on our communication materials.
-            </li>
-        </ol>
-        <label
-            >I <b>CONSENT</b> to Manifest Kenya holding and using my information
-            and contacting me for the above purposes</label
-        ><br />
-        <input
-            type="radio"
-            id="consent_yes"
-            name="consent"
-            value="yes"
-            required
-        />
-        <label for="consent_yes">Yes</label>
-        <input type="radio" id="consent_no" name="consent" value="no" />
-        <label for="consent_no">No</label><br />
-        <button type="submit" class="btn btn-primary">Submit</button>
-        </form>
-        </div>
-        </div>
-    </div>
+                <!-- Student Status -->
+                <div class="form-group">
+                    <label class="font-weight-bold">Are you a student?</label>
+                    <div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="student" id="student_yes" value="yes" required>
+                            <label class="form-check-label" for="student_yes">Yes</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="student" id="student_no" value="no">
+                            <label class="form-check-label" for="student_no">No</label>
+                        </div>
+                    </div>
+                </div>
 
-        <script>
-        document
-            .getElementById("serving_yes")
-            .addEventListener("click", function () {
-            document.getElementById("teams").style.display = "block";
-            });
-        document
-            .getElementById("serving_no")
-            .addEventListener("click", function () {
-            document.getElementById("teams").style.display = "none";
-            });
-        document
-            .getElementById("student_yes")
-            .addEventListener("click", function () {
-            document.getElementById("institution").style.display = "block";
-            });
-        document
-            .getElementById("student_no")
-            .addEventListener("click", function () {
-            document.getElementById("institution").style.display = "none";
-            });
-        </script>
-        {% endblock %}
-    </div>
+                <!-- First Timer -->
+                <div class="form-group">
+                    <label class="font-weight-bold">Is this your first time?</label>
+                    <div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="first_time" id="first_time_yes" value="yes" required>
+                            <label class="form-check-label" for="first_time_yes">Yes</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="first_time" id="first_time_no" value="no">
+                            <label class="form-check-label" for="first_time_no">No</label>
+                        </div>
+                    </div>
+                    <small class="form-text text-muted">Please indicate whether it’s your first time attending the physical livestream.</small>
+                </div>
+
+                <!-- Data Protection Notice -->
+                <div class="form-group">
+                    <h5 class="font-weight-bold">DATA PROTECTION NOTICE</h5>
+                    <p>
+                        Manifest Fellowship would like to hold and use the information you have provided in this form for the purposes set out below:
+                    </p>
+                    <ol>
+                        <li>To keep you informed of events, services, and other related communication from the ministry.</li>
+                        <li>To share your contact details with our teams for experience sharing with the ministry.</li>
+                        <li>To use your photograph(s) and video(s) taken during any of our events on our communication materials.</li>
+                    </ol>
+
+                    <label class="font-weight-bold">
+                        I CONSENT to Manifest Kenya holding and using my information and contacting me for the above purposes.
+                    </label>
+                    <div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="consent" id="consent_yes" value="yes" required>
+                            <label class="form-check-label" for="consent_yes">Yes</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="consent" id="consent_no" value="no">
+                            <label class="form-check-label" for="consent_no">No</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="text-center">
+                    <button type="submit" class="btn btn-success btn-lg">Submit</button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
+
+{% endblock %}

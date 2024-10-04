@@ -18,10 +18,11 @@
 
     <style>
       /* Custom CSS for centering the form */
-      body,
-      html {
+      body, html {
         height: 100%;
-        margin: 0 auto;
+        margin: 0;
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        background-color: #f4f4f4;
       }
 
       .container {
@@ -29,17 +30,29 @@
         justify-content: center;
         align-items: center;
         min-height: 100vh;
-        margin: 0 auto;
-      } -->
+        background-color: white;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        border-radius: 8px;
+      }
+
+      footer {
+        text-align: center;
+        padding: 20px;
+        background-color: #343a40;
+        color: white;
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+      }
     </style>
   </head>
   <body>
     <main>{% block content %}{% endblock %}</main>
 
-    <footer>
-      <!-- Common footer content goes here -->
+    <!-- <footer>
       <p>&copy; 2024 Manifest Fellowship Kenya.</p>
-    </footer>
+    </footer> -->
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->

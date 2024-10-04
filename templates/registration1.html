@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+
+{% block title %}Registration Form{% endblock %}
+
+{%block content %}
+<div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-8 col-md-10 col-sm-12">
+        <h1 class="mb-4 text-center">Manifest Kenya Registration Form</h1>
+        <p class="text-center">
+          Welcome! Please fill out the form below to register for today's service.
+        </p>
+  
+        <form method="post" action="/" class="mt-4">
+          {% csrf_token %}
+        
+            <div class="form-row">
+                <div class="col-md-6 mb-3">
+                <label for="first_name">First Name</label>
+                <p>{{ form.first_name }}</p>
+                </div>
+                <div class="col-md-6 mb-3">
+                <label for="last_name">Last Name</label>
+                <p>{{ form.last_name }}</p>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="gender">Gender</label><br>
+                <input type="radio" id="male" name="gender" value="male" required />
+                <label for="male">Male</label>
+                <input type="radio" id="female" name="gender" value="female" />
+                <label for="female">Female</label>
+              </div>
+      
+              <div class="form-group">
+                <label for="phone_number">Phone Number</label>
+                <p>{{ form.phone_number }}</p>
+              </div>
+      
+              <div class="form-group">
+                <label for="residence">Residence</label>
+                <p>{{ form.residence }}</p>
+              </div>
+
+              <div class="form-group">
+                <label>Are you serving with us?</label><br>
+                <input type="radio" id="serving_yes" name="serving" value="yes" />
+                <label for="serving_yes">Yes</label>
+                <input type="radio" id="serving_no" name="serving" value="no" />
+                <label for="serving_no">No</label>
+      
+                <div id="teams" style="display: none" class="mt-3">
+                  <label>Select Your Serving Department</label>
+                  <select class="form-control">
+                    <option value="administration">Administration</option>
+                    <option value="welfare">Welfare</option>
+                    <option value="communications">Communications</option>
+                    <option value="missions">Missions and Outreach</option>
+                    <option value="operations">Operations</option>
+                    <option value="legal">Legal</option>
+                    <option value="finance">Finance</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>Are you a student?</label><br>
+                <input type="radio" id="student_yes" name="student" value="yes" />
+                <label for="student_yes">Yes</label>
+                <input type="radio" id="student_no" name="student" value="no" />
+                <label for="student_no">No</label>
+      
+                <div id="institution" style="display: none" class="mt-3">
+                  <h4>Institution Information</h4>
+                  <div class="form-row">
+                    <div class="col-md-6 mb-3">
+                      <label for="institution_name">Name of Institution</label>
+                      <p>{{ form.institution_name }}</p>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                      <label for="institution_location">Location of Institution</label>
+                      <p>{{ form.institution_location }}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label>Is this your first time?</label><br>
+                <input type="radio" id="first_time_yes" name="first_time" value="yes" required />
+                <label for="first_time_yes">Yes</label>
+                <input type="radio" id="first_time_no" name="first_time" value="no" />
+                <label for="first_time_no">No</label>
+              </div>
+
+            <h5 class="mt-4">Data Protection Notice</h5>
+            <p>
+                Manifest Fellowship would like to hold and use the information you
+                have provided in this form for the purposes set out below:
+            </p>
+            <ol type="1">
+                <li>
+                To keep you informed of events, services, and other related
+                communication from the ministry.
+                </li>
+                <li>
+                To share your contact details with our teams for experience sharing
+                with the ministry.
+                </li>
+                <li>
+                To use your photograph(s) and video(s) taken during any of our
+                events on our communication materials.
+                </li>
+            </ol>
+
+            <div class="form-group">
+            <input type="radio" id="consent_yes" name="consent" value="yes" required />
+            <label for="consent_yes">I CONSENT</label>
+            <input type="radio" id="consent_no" name="consent" value="no" />
+            <label for="consent_no">I DO NOT CONSENT</label>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block">Submit</button>
+        </form>  
+    </div>
+    </div>
+</div>
+
+<script>
+document
+    .getElementById("serving_yes")
+    .addEventListener("click", function () {
+    document.getElementById("teams").style.display = "block";
+    });
+document
+    .getElementById("serving_no")
+    .addEventListener("click", function () {
+    document.getElementById("teams").style.display = "none";
+    });
+document
+    .getElementById("student_yes")
+    .addEventListener("click", function () {
+    document.getElementById("institution").style.display = "block";
+    });
+document
+    .getElementById("student_no")
+    .addEventListener("click", function () {
+    document.getElementById("institution").style.display = "none";
+    });
+</script>
+{% endblock %}

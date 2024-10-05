@@ -8,12 +8,12 @@ def registration_view(request):
         form = RegistrationForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('thank_you')
+            return redirect('welcome')
     else:
         form = RegistrationForm()
 
     return render(request, 'registration.html', {'form': form})
 
-def thank_you_view(request):
+def welcome_view(request):
     """Thank you page view, displayed after registration"""
-    return render(request, 'thank_you.html')
+    return render(request, 'welcome.html')

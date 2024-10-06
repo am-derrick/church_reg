@@ -17,6 +17,7 @@
             </p>
 
             <form action="/" method="post" class="p-4">
+                {% csrf_token %}
                 <!-- Name Section -->
                 <div class="form-group row">
                     <label for="first_name" class="col-sm-2 col-form-label font-weight-bold">Name</label>

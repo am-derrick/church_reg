@@ -8,10 +8,11 @@ class Registration(models.Model):
     phone_number = models.CharField(max_length=15)
     residence = models.CharField(max_length=255)
     is_student = models.BooleanField(default=False)
+    institution_name = models.CharField(max_length=255)
+    institution_location = models.CharField(max_length=255)
+    occupation = models.CharField(max_length=255)
     is_first_time = models.BooleanField(default=False)
     consent = models.BooleanField(default=False)
-
-    # To-Do: Add field for occupation
     
     def __str__(self):
         return f"{self.first_name} {self.last_name}"

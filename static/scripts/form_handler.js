@@ -1,17 +1,20 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const studentYes = document.getElementById('student_yes');
-    const studentNo = document.getElementById('student_no');
-    const additionalFields = document.getElementById('additionalFields');
+    const isStudentField = document.querySelector('input[name="is_student"][value="Yes"]');
+    const studentFields = document.getElementById('studentFields');
     const occupationField = document.getElementById('occupationField');
 
-    // Add event listeners to the radio buttons
-    studentYes.addEventListener('click', function() {
-        additionalFields.style.display = 'block'; // Show the additional fields when "Yes" is selected
-        occupationField.style.display = 'none'; // Hide occupation when "Yes" is selected
-    });
+    function toggleFields() {
+        if (isStudentField.checked) {
+            studentFields.style.display = 'block';
+            occupationField.style.display = 'none';
+        } else {
+            studentFields.style.display = 'none';
+            occupationField.style.display = 'block';
+        }
+    } 
 
-    studentNo.addEventListener('click', function() {
-        additionalFields.style.display = 'none'; // Hide the additional fields when "No" is selected
-        occupationField.style.display = 'block'; // Show occupation when "No" is selected
+    document.querySelectorAll('input[name="is_student"]').forEach(radio => {
+        radio.addEventListener('change', toggleFields);
     });
+    toggleFields();
 });

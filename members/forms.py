@@ -40,3 +40,10 @@ class RegistrationForm(forms.ModelForm):
             'is_first_time': '',
             'consent': '',
         }
+
+    def clean(self):
+        cleaned_data = super().clean()
+        cleaned_data['is_student'] = cleaned_data['is_student'] == 'True'
+        cleaned_data['is_first_time'] = cleaned_data['is_first_time'] == 'True'
+        cleaned_data['consent'] = cleaned_data['consent'] == 'True'
+        return cleaned_data

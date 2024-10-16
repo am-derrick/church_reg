@@ -1,8 +1,37 @@
 {% extends "base.html" %}
+{% load static %}
 
-{% block title %}Thank You{% endblock %}
+{% block title %}Welcome to Manifest Fellowship Kenya{% endblock %}
 
 {% block content %}
-<h1>Thank You for Joining us Today!</h1>
-<p>Have a blessed Service.</p>
+<div class="container-fluid p-0">
+    <div class="row no-gutters">
+        <div class="col-lg-8 offset-lg-2">
+            <!-- Header -->
+            <div class="bg-black text-white p-3 d-flex align-items-center justify-content-between">
+                <img src="{% static 'images/logo-01.png' %}" alt="Manifest Fellowship Kenya Logo" class="img-fluid" width="100">
+                <h1 class="font-weight-bold mb-0">WELCOME</h1>
+            </div>
+            
+            <!-- Main Content -->
+            <div class="bg-white p-5 text-center">
+                <h2 class="mb-4">Thank You for Joining Us Today, {{ first_name }}!</h2>
+                <p class="lead mb-4">We're delighted to have you with us at Manifest Fellowship Kenya.</p>
+                <div class="card shadow-sm mb-4">
+                    <div class="card-body">
+                        <h3 class="card-title">Have a Blessed Service</h3>
+                        <p class="card-text">May your time here be filled with joy, inspiration, and spiritual growth.</p>
+                    </div>
+                </div>
+                <p>If you have any questions or need assistance, please don't hesitate to ask one of our ushers.</p>
+                <a href="https://phaneroo.org" class="btn btn-primary mt-3">Find more about Phaneroo</a>
+            </div>
+            
+            <!-- Footer -->
+            <div class="bg-black text-white p-3 text-center">
+                <p class="mb-0">&copy; {% now "Y" %} Manifest Fellowship Kenya. All rights reserved.</p>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

@@ -39,16 +39,24 @@
       .bg-black {
         background-color: black !important;
       }
+
+      .card {
+        border: none;
+        border-radius: 15px;
+    }
+    .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+    }
+    .btn-primary:hover {
+        background-color: #0056b3;
+        border-color: #0056b3;
+    }
     </style>
   </head>
   <body>
     <main>{% block content %}{% endblock %}</main>
 
-    <!-- <footer>
-      <p>&copy; 2024 Manifest Fellowship Kenya.</p>
-    </footer> -->
-
-    <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script
       src="https://code.jquery.com/jquery-3.3.1.slim.min.js"

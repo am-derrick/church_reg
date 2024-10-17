@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.urls import reverse
 from .forms import RegistrationForm
 
 def registration_view(request):
@@ -7,7 +8,7 @@ def registration_view(request):
         form = RegistrationForm(request.POST)
         if form.is_valid():
             registration = form.save()
-            return redirect('welcome', first_name=registration.first_name)
+            return redirect(reverse('welcome', kwargs={'first_name': registration.first_name}))
     else:
         form = RegistrationForm()
     return render(request, 'registration.html', {'form': form})

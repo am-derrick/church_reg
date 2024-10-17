@@ -3,6 +3,11 @@
 
 {% block title %}Welcome to Manifest Fellowship Kenya{% endblock %}
 
+{% block extra_head %}
+<!-- Font Awesome for social media icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+{% endblock %}
+
 {% block content %}
 <div class="container-fluid p-0 d-flex flex-column min-vh-100">
     <!-- Carousel Header -->
@@ -46,7 +51,7 @@
     <div class="flex-grow-1 bg-white p-5 d-flex flex-column justify-content-center">
         <div class="text-center">
             <h2 class="mb-4">Thank You for Joining Us Today, {{ first_name }}!</h2>
-            <p class="lead mb-4">We're delighted to have you with us at Manifest Fellowship Kenya.</p>
+            <p class="lead mb-4">We're delighted to have you fellowship with us at Manifest Fellowship Kenya.</p>
             <div class="card shadow-sm mb-4">
                 <div class="card-body">
                     <h3 class="card-title">Have a Blessed Service</h3>
@@ -60,15 +65,22 @@
     <!-- Footer -->
     <div class="bg-black text-white p-3 text-center">
         <p class="mb-0">&copy; {% now "Y" %} Manifest Fellowship Kenya. All rights reserved.</p>
+        <div class="social-icons">
+            <a href="https://www.facebook.com/share/g/PFDhGVjBQfTejSWR/?mibextid=K35XfP" class="text-white mx-2" target="_blank"><i class="fab fa-facebook-f"></i></a>
+            <a href="https://x.com/ManifestKenya" class="text-white mx-2" target="_blank"><i class="fab fa-twitter"></i></a>
+            <a href="https://www.instagram.com/manifest_kenya/" class="text-white mx-2" target="_blank"><i class="fab fa-instagram"></i></a>
+            <a href="https://www.tiktok.com/@manifestkenya" class="text-white mx-2" target="_blank"><i class="fab fa-tiktok"></i></a>
+        </div>
     </div>
 </div>
+
 {% endblock %}
 
 {% block extra_css %}
 <style>
     .carousel-item img {
         object-fit: cover;
-        height: 70vh; /* Adjust this value to control the height of the carousel */
+        height: 70vh;
     }
     .bg-opacity-75 {
         background-color: rgba(0, 0, 0, 0.75);
@@ -77,6 +89,13 @@
         .carousel-item img {
             height: 40vh; /* Smaller height for mobile devices */
         }
+    }
+    .social-icons a {
+        font-size: 1.5rem;
+        transition: color 0.3s ease;
+    }
+    .social-icons a:hover {
+        color: #007bff !important;
     }
 </style>
 {% endblock %}

@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
-{% load crispy_forms_tags %}
+{% load static %}
 
-{% block title %}Enter Phone Number{% endblock %}
+{% block title %}Welcome to Manifest Fellowship{% endblock %}
 
 {% block extra_head %}
 <!-- Font Awesome for social media icons -->
@@ -9,43 +9,37 @@
 {% endblock %}
 
 {% block content %}
-{% load static %}
 <div class="container-fluid p-0">
     <div class="row no-gutters">
-        <div class="col-lg-8 offset-lg-2">
-            <div class="bg-black text-white p-3">
-                <img src="{% static 'images/logo-01.png' %}" alt="Manifest Fellowship Kenya Logo" class="img-fluid" width="100">
-                <h1 class="font-weight-bold text-center mb-0">ENTER PHONE NUMBER</h1>
+        <div class="col-12 text-center">
+            <div class="bg-black py-4">
+                <img src="{% static 'images/logo-01.png' %}" alt="Manifest Fellowship Kenya Logo" class="img-fluid" width="300">
             </div>
-            <div class="bg-white p-4">
-                <p class="text-center mb-4">
-                    Welcome to Church today!
-                    Please enter your phone number to begin the registration process.
-                </p>
+            <div class="bg-white p-4 rounded-top">
+                <h2 class="font-weight-bold">Welcome to Church today!</h2>
+                <p class="text-muted">Please enter your full name to begin the registration process.</p>
 
-                <form method="post" class="needs-validation" novalidate>
+                <form method="post" class="mt-4">
                     {% csrf_token %}
-                    
                     <div class="form-group">
-                        <label class="font-weight-bold">Phone Number</label>
-                        {{ form.phone_number }}
+                        <label for="{{ form.phone_number.id_for_label }}" class="sr-only">Your Name</label>
+                        {{ form.phone_number|attr:"class:form-control form-control-lg text-center"|attr:"placeholder:Your Name" }}
                     </div>
 
-                    <div class="text-center">
-                        <button type="submit" class="btn btn-success btn-lg">Continue</button>
-                    </div>
+                    <button type="submit" class="btn btn-lg btn-warning mt-4">Continue</button>
                 </form>
             </div>
-            <div class="bg-black text-white p-3 text-center">
-                <p class="mb-0">
-                    &copy; {% now "Y" %} Manifest Fellowship Kenya. All rights reserved.
-                </p>
-                <div class="social-icons">
+            <div class="bg-white pb-4">
+                <div class="social-icons mt-4">
                     <a href="https://www.facebook.com/share/g/PFDhGVjBQfTejSWR/?mibextid=K35XfP" class="text-white mx-2" target="_blank"><i class="fab fa-facebook-f"></i></a>
                     <a href="https://x.com/ManifestKenya" class="text-white mx-2" target="_blank"><i class="fab fa-twitter"></i></a>
                     <a href="https://www.instagram.com/manifest_kenya/" class="text-white mx-2" target="_blank"><i class="fab fa-instagram"></i></a>
                     <a href="https://www.tiktok.com/@manifestkenya" class="text-white mx-2" target="_blank"><i class="fab fa-tiktok"></i></a>
                 </div>
+                <p class="text-muted mt-3">
+                    &copy; {% now "Y" %} Manifest Fellowship Kenya.<br>
+                    All rights reserved.
+                </p>
             </div>
         </div>
     </div>
@@ -54,12 +48,19 @@
 
 {% block extra_css %}
 <style>
+    body {
+        background-color: #000;
+    }
     .social-icons a {
         font-size: 1.5rem;
-        transition: color 0.3s ease;
+        /* transition: color 0.3s ease; */
     }
-    .social-icons a:hover {
+    /** .social-icons a:hover {
         color: #007bff !important;
+    } */
+    .btn-warning {
+        background-color: #e0a800;
+        border-color: #e0a800;
     }
 </style>
 {% endblock %}

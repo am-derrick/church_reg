@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Confirm Your Details</h2>
+<p>We found your previous registration. Please confirm or update your details:</p>
+<form method="post" action="{% url 'registration_confirm' %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="hidden" name="phone_number" value="{{ phone_number }}">
+    <button type="submit">Confirm</button>
+</form>
+{% endblock %}

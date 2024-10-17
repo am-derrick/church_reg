@@ -81,6 +81,7 @@
     .carousel-item img {
         object-fit: cover;
         height: 70vh;
+        object-position: 50% 20%;
     }
     .bg-opacity-75 {
         background-color: rgba(0, 0, 0, 0.75);
@@ -88,6 +89,7 @@
     @media (max-width: 768px) {
         .carousel-item img {
             height: 40vh; /* Smaller height for mobile devices */
+            object-position: top center;
         }
     }
     .social-icons a {
@@ -98,4 +100,14 @@
         color: #007bff !important;
     }
 </style>
+
+<script>
+    $(document).ready(function(){
+        // Initialize the carousel and set the speed (interval)
+        $('#welcomeCarousel').carousel({
+            interval: 2000, // interval in milliseconds (2000 = 2 seconds)
+            ride: 'carousel' // automatically start the carousel
+        });
+    });
+</script>
 {% endblock %}

@@ -1,11 +1,183 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}Confirm Registration{% endblock %}
+
+{% block extra_head %}
+<!-- Font Awesome for social media icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+{% endblock %}
+
 {% block content %}
-<h2>Confirm Your Details</h2>
-<p>We found your previous registration. Please confirm or update your details:</p>
-<form method="post" action="{% url 'registration_confirm' %}">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <input type="hidden" name="phone_number" value="{{ phone_number }}">
-    <button type="submit">Confirm</button>
-</form>
+{% load static %}
+<div class="container-fluid p-0">
+    <div class="row no-gutters">
+        <div class="col-lg-8 offset-lg-2">
+            <div class="bg-black text-white p-3">
+                <img src="{% static 'images/logo-01.png' %}" alt="Manifest Fellowship Kenya Logo" class="img-fluid" width="100">
+                <h1 class="font-weight-bold text-center mb-0">CONFIRM REGISTRATION</h1>
+            </div>
+            <div class="bg-white p-4">
+                <p class="text-center mb-4">
+                    We found your previous registration. Please confirm or update your details:
+                </p>
+
+                <form method="post" action="{% url 'registration_confirm' %}" class="needs-validation" novalidate>
+                    {% csrf_token %}
+                    
+                    <!-- Name Section -->
+                    <div class="form-group">
+                        <label class="font-weight-bold">Name</label>
+                        <div class="row">
+                            <div class="col-md-6">
+                                {{ form.first_name|as_crispy_field }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form.last_name|as_crispy_field }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Gender Section -->
+                    <div class="form-group">
+                        <label class="font-weight-bold">Gender</label>
+                        <div>
+                            {% for radio in form.gender %}
+                                <div class="form-check form-check-inline">
+                                    {{ radio.tag }}
+                                    <label class="form-check-label" for="{{ radio.id_for_label }}">
+                                        {{ radio.choice_label }}
+                                    </label>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- Phone Section -->
+                    <div class="form-group">
+                        <label class="font-weight-bold">Phone Number</label>
+                        {{ form.phone_number|as_crispy_field }}
+                    </div>
+
+                    <!-- Residence -->
+                    <div class="form-group">
+                        <label class="font-weight-bold">Residence</label>
+                        {{ form.residence|as_crispy_field }}
+                    </div>
+
+                    <!-- Student Status -->
+                    <div class="form-group">
+                        <label class="font-weight-bold">Are you a Student?</label>
+                        <div>
+                            {% for radio in form.is_student %}
+                                <div class="form-check form-check-inline">
+                                    {{ radio.tag }}
+                                    <label class="form-check-label" for="{{ radio.id_for_label }}">
+                                        {{ radio.choice_label }}
+                                    </label>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    
+                    <!-- Additional fields, hidden initially -->
+                    <div id="studentFields" style="display: none;">
+                        <div class="form-group">
+                            <label class="font-weight-bold">Name of Institution</label>
+                            {{ form.institution_name|as_crispy_field }}
+                        </div>
+                        <div class="form-group">
+                            <label class="font-weight-bold">Location of Institution</label>
+                            {{ form.institution_location|as_crispy_field }}
+                        </div>
+                    </div>
+
+                    <!-- Occupation -->
+                    <div id="occupationField">
+                        <div class="form-group">
+                            <label class="font-weight-bold">Occupation</label>
+                            {{ form.occupation|as_crispy_field }}
+                        </div>
+                    </div>
+                    
+                    <!-- First Timer -->
+                    <div class="form-group">
+                        <label class="font-weight-bold">Is this your first time?</label>
+                        <div>
+                            {% for radio in form.is_first_time %}
+                                <div class="form-check form-check-inline">
+                                    {{ radio.tag }}
+                                    <label class="form-check-label" for="{{ radio.id_for_label }}">
+                                        {{ radio.choice_label }}
+                                    </label>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <small class="form-text text-muted">Please indicate whether it's your first time attending the physical livestream.</small>
+                    </div>
+
+                    <!-- Data Protection Notice & Consent -->
+                    <div class="form-group">
+                        <h5 class="font-weight-bold">DATA PROTECTION NOTICE</h5>
+                        <p>
+                            Manifest Fellowship would like to hold and use the information you have provided in this form for the purposes set out below:
+                        </p>
+                        <ol>
+                            <li>To keep you informed of events, services, and other related communication from the ministry.</li>
+                            <li>To share your contact details with our teams for experience sharing with the ministry.</li>
+                            <li>To use your photograph(s) and video(s) taken during any of our events on our communication materials.</li>
+                        </ol>
+                        <div class="form-group">
+                            <label class="font-weight-bold">
+                                I CONSENT to Manifest Kenya holding and using my information and contacting me for the above purposes.
+                            </label>
+                            <div>
+                                {% for radio in form.consent %}
+                                    <div class="form-check form-check-inline">
+                                        {{ radio.tag }}
+                                        <label class="form-check-label" for="{{ radio.id_for_label }}">
+                                            {{ radio.choice_label }}
+                                        </label>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <input type="hidden" name="phone_number" value="{{ phone_number }}">
+
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-success btn-lg">Confirm and Submit</button>
+                    </div>
+                </form>
+            </div>
+            <div class="bg-black text-white p-3 text-center">
+                <p class="mb-0">
+                    &copy; {% now "Y" %} Manifest Fellowship Kenya. All rights reserved.
+                </p>
+                <div class="social-icons">
+                    <a href="https://www.facebook.com/share/g/PFDhGVjBQfTejSWR/?mibextid=K35XfP" class="text-white mx-2" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://x.com/ManifestKenya" class="text-white mx-2" target="_blank"><i class="fab fa-twitter"></i></a>
+                    <a href="https://www.instagram.com/manifest_kenya/" class="text-white mx-2" target="_blank"><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.tiktok.com/@manifestkenya" class="text-white mx-2" target="_blank"><i class="fab fa-tiktok"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'scripts/form_handler.js' %}"></script>
+
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .social-icons a {
+        font-size: 1.5rem;
+        transition: color 0.3s ease;
+    }
+    .social-icons a:hover {
+        color: #007bff !important;
+    }
+</style>
 {% endblock %}

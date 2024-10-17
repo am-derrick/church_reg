@@ -1,6 +1,11 @@
 from django import forms
 from .models import Registration
 
+class PhoneNumberForm(forms.Form):
+    """Form for Phone Number"""
+    phone_number = forms.CharField(min_length=12, max_length=15,
+                                   widget=forms.TextInput(attrs={'placeholder': 'Phone Number', 'class': 'form-control'}))
+
 class RegistrationForm(forms.ModelForm):
     """Registration form utilising Django forms"""
     class Meta:
@@ -13,7 +18,8 @@ class RegistrationForm(forms.ModelForm):
             'last_name': forms.TextInput(attrs={'placeholder': 'Last', 'class': 'form-control'}),
             'gender': forms.RadioSelect(attrs={'class': 'form-check-input'}),
             'phone_number': forms.TextInput(attrs={'placeholder': 'Phone Number', 'class': 'form-control'}),
-            'residence': forms.TextInput(attrs={'placeholder': 'This is where you currently live i.e. City, Town, Estate etc.', 'class': 'form-control'}),
+            'residence': forms.TextInput(attrs={'placeholder': 'This is where you currently live i.e. City, Town, Estate etc.',
+                                                'class': 'form-control'}),
             'is_student': forms.RadioSelect(attrs={'class': 'form-check-input'}),
             'institution_name': forms.TextInput(attrs={'placeholder': 'Name of Institution', 'class': 'form-control'}),
             'institution_location': forms.TextInput(attrs={'placeholder': 'Location of Institution', 'class': 'form-control'}),

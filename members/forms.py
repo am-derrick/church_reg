@@ -3,7 +3,7 @@ from .models import Registration
 
 class PhoneNumberForm(forms.Form):
     """Form for Phone Number"""
-    phone_number = forms.CharField(min_length=12, max_length=15,
+    phone_number = forms.CharField(min_length=10, max_length=12,
                                    widget=forms.TextInput(attrs={'placeholder': 'Phone Number', 'class': 'form-control'}))
 
 class RegistrationForm(forms.ModelForm):

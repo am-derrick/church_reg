@@ -1,49 +1,106 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
+{% load static %}
 
-{% block title %}Registration Form{% endblock %}
-
-{% block extra_head %}
-<!-- Font Awesome for social media icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-{% endblock %}
+{% block title %}Registration Form - Manifest Fellowship Kenya{% endblock %}
 
 {% block content %}
-{% load static %}
-<div class="container-fluid p-0">
-    <div class="row no-gutters">
-        <div class="col-lg-8 offset-lg-2">
-            <div class="bg-black text-white p-3">
-                <img src="{% static 'images/logo-01.png' %}" alt="Manifest Fellowship Kenya Logo" class="img-fluid" width="100">
-                <h1 class="font-weight-bold text-center mb-0">REGISTRATION FORM</h1>
-            </div>
-            <div class="bg-white p-4">
-                <p class="text-center mb-4">
-                    This is an online registration form for members who are attending the
-                    Physical Livestream Centre for Manifest Kenya, Nairobi.
-                </p>
+<div class="d-flex flex-column min-vh-100">
+    <div class="bg-black py-2 text-center">
+        <img src="{% static 'images/logo-01.png' %}" alt="Manifest Fellowship Kenya Logo" class="img-fluid" width="200"> 
+    </div>
+    <div class="bg-white flex-grow-1 d-flex flex-column justify-content-between" style="border-radius: 30px 30px 0 0;">
+        <div class="container py-4">
+            <h5 class="font-weight-bold mb-0">REGISTRATION FORM</h5>
+            <p class="mb-4 mt-4 text-black-50">
+                This is an online registration form for members who are attending the
+                Physical Livestream Centre for Manifest Kenya, Nairobi.
+            </p>
 
-                <form method="post" class="needs-validation" novalidate>
-                    {% csrf_token %}
+            <form method="post" class="needs-validation" novalidate>
+                {% csrf_token %}
 
-                    <!-- Name Section -->
-                    <div class="form-group">
-                        <label class="font-weight-bold">Name</label>
-                        <div class="row">
-                            <div class="col-md-6">
-                                {{ form.first_name|as_crispy_field }}
-                            </div>
-                            <div class="col-md-6">
-                                {{ form.last_name|as_crispy_field }}
-                            </div>
+                <!-- Name Section -->
+                <div class="form-group text-black-50">
+                    <label class="font-weight-bold ">Name</label>
+                    <div class="row">
+                        <div class="col-md-6">
+                            {{ form.first_name|as_crispy_field }}
+                        </div>
+                        <div class="col-md-6">
+                            {{ form.last_name|as_crispy_field }}
                         </div>
                     </div>
+                </div>
 
-                    <!-- Gender Section -->
-                    <div class="form-group">
-                        <label class="font-weight-bold">Gender</label>
+                <!-- Gender Section -->
+                <div class="form-group text-black-50">
+                    <label class="font-weight-bold">Gender</label>
+                    <div>
+                        {% for radio in form.gender %}
+                            <div class="form-check form-check-inline">
+                                {{ radio.tag }}
+                                <label class="form-check-label" for="{{ radio.id_for_label }}">
+                                    {{ radio.choice_label }}
+                                </label>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    
+                </div>
+
+                <!-- Phone Section -->
+                <div class="form-group text-black-50">
+                    <label class="font-weight-bold">Phone Number</label>
+                    {{ form.phone_number|as_crispy_field }}
+                </div>
+
+                <!-- Residence -->
+                <div class="form-group text-black-50">
+                    <label class="font-weight-bold">Residence</label>
+                    {{ form.residence|as_crispy_field }}
+                </div>
+
+                <!-- Student Status -->
+                <div class="form-group text-black-50">
+                    <label class="font-weight-bold">Are you a Student?</label>
+                    <div>
+                        {% for radio in form.is_student %}
+                            <div class="form-check form-check-inline">
+                                {{ radio.tag }}
+                                <label class="form-check-label" for="{{ radio.id_for_label }}">
+                                    {{ radio.choice_label }}
+                                </label>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <!-- Additional fields, hidden initially -->
+                <div id="studentFields" style="display: none;">
+                    <div class="form-group text-black-50">
+                        <label class="font-weight-bold">Name of Institution</label>
+                        {{ form.institution_name|as_crispy_field }}
+                    </div>
+                    <div class="form-group text-black-50">
+                        <label class="font-weight-bold">Location of Institution</label>
+                        {{ form.institution_location|as_crispy_field }}
+                    </div>
+                </div>
+
+                <!-- Occupation -->
+                <div id="occupationField">
+                    <div class="form-group text-black-50">
+                        <label class="font-weight-bold">Occupation</label>
+                        {{ form.occupation|as_crispy_field }}
+                    </div>
+                </div>
+                
+                <!-- First Timer -->
+                <div class="form-group text-black-50">
+                    <label class="font-weight-bold">Is this your first time?</label>
                         <div>
-                            {% for radio in form.gender %}
+                            {% for radio in form.is_first_time %}
                                 <div class="form-check form-check-inline">
                                     {{ radio.tag }}
                                     <label class="form-check-label" for="{{ radio.id_for_label }}">
@@ -52,75 +109,13 @@
                                 </div>
                             {% endfor %}
                         </div>
-                        
-                    </div>
+                    <small class="form-text text-muted">Please indicate whether it’s your first time attending the physical livestream.</small>
+                </div>
 
-                    <!-- Phone Section -->
-                    <div class="form-group">
-                        <label class="font-weight-bold">Phone Number</label>
-                        {{ form.phone_number|as_crispy_field }}
-                    </div>
-
-                    <!-- Residence -->
-                    <div class="form-group">
-                        <label class="font-weight-bold">Residence</label>
-                        {{ form.residence|as_crispy_field }}
-                    </div>
-
-                    <!-- Student Status -->
-                    <div class="form-group">
-                        <label class="font-weight-bold">Are you a Student?</label>
-                        <div>
-                            {% for radio in form.is_student %}
-                                <div class="form-check form-check-inline">
-                                    {{ radio.tag }}
-                                    <label class="form-check-label" for="{{ radio.id_for_label }}">
-                                        {{ radio.choice_label }}
-                                    </label>
-                                </div>
-                            {% endfor %}
-                        </div>
-                    </div>
-                    
-                    <!-- Additional fields, hidden initially -->
-                    <div id="studentFields" style="display: none;">
-                        <div class="form-group">
-                            <label class="font-weight-bold">Name of Institution</label>
-                            {{ form.institution_name|as_crispy_field }}
-                        </div>
-                        <div class="form-group">
-                            <label class="font-weight-bold">Location of Institution</label>
-                            {{ form.institution_location|as_crispy_field }}
-                        </div>
-                    </div>
-
-                    <!-- Occupation -->
-                    <div id="occupationField">
-                        <div class="form-group">
-                            <label class="font-weight-bold">Occupation</label>
-                            {{ form.occupation|as_crispy_field }}
-                        </div>
-                    </div>
-                    
-                    <!-- First Timer -->
-                    <div class="form-group">
-                        <label class="font-weight-bold">Is this your first time?</label>
-                            <div>
-                                {% for radio in form.is_first_time %}
-                                    <div class="form-check form-check-inline">
-                                        {{ radio.tag }}
-                                        <label class="form-check-label" for="{{ radio.id_for_label }}">
-                                            {{ radio.choice_label }}
-                                        </label>
-                                    </div>
-                                {% endfor %}
-                            </div>
-                        <small class="form-text text-muted">Please indicate whether it’s your first time attending the physical livestream.</small>
-                    </div>
-
-                    <!-- Data Protection Notice & Consent -->
-                    <div class="form-group">
-                        <h5 class="font-weight-bold">DATA PROTECTION NOTICE</h5>
+                <!-- Data Protection Notice & Consent -->
+                <div class="form-group">
+                    <h5 class="font-weight-bold">DATA PROTECTION NOTICE</h5>
+                    <div class="text-black-50">
                         <p>
                             Manifest Fellowship would like to hold and use the information you have provided in this form for the purposes set out below:
                         </p>
@@ -145,26 +140,23 @@
                                 </div>
                         </div>
                     </div>
-
-                    <!-- Submit Button -->
-                    <div class="text-center">
-                        <button type="submit" class="btn btn-success btn-lg">Submit</button>
                     </div>
-                </form>
-            </div>
-            <div class="bg-black text-white p-3 text-center">
-                <p class="mb-0">
-                    &copy; {% now "Y" %} Manifest Fellowship Kenya. All rights reserved.
-                </p>
-                <div class="social-icons">
-                    <a href="https://www.facebook.com/share/g/PFDhGVjBQfTejSWR/?mibextid=K35XfP" class="text-white mx-2" target="_blank"><i class="fab fa-facebook-f"></i></a>
-                    <a href="https://x.com/ManifestKenya" class="text-white mx-2" target="_blank"><i class="fab fa-twitter"></i></a>
-                    <a href="https://www.instagram.com/manifest_kenya/" class="text-white mx-2" target="_blank"><i class="fab fa-instagram"></i></a>
-                    <a href="https://www.tiktok.com/@manifestkenya" class="text-white mx-2" target="_blank"><i class="fab fa-tiktok"></i></a>
-                </div>
-            </div>
+                    
+
+                <!-- Submit Button -->
+                    <div class="text-center">
+                    <button type="submit" class="btn btn-lg btn-warning mt-4 font-weight-bold text-white">Submit</button>
+                    </div>
+                
+            </form>
         </div>
     </div>
+    <footer class="bg-white py-4 text-center">
+        <p class="text-muted mb-0">
+            &copy; <b>{% now "Y" %}</b> Manifest Fellowship Kenya.<br>
+            All rights reserved.
+        </p>
+    </footer>
 </div>
 
 <script src="{% static 'scripts/form_handler.js' %}"></script>
@@ -173,6 +165,16 @@
 
 {% block extra_css %}
 <style>
+    body, html {
+        height: 100%;
+        margin: 0;
+        font-family: "Inter", sans-serif;
+        background-color: black;
+    }
+    .btn-warning {
+        background-color: #f79d22;
+        border-color: #f79d22;
+    }
     .social-icons a {
         font-size: 1.5rem;
         transition: color 0.3s ease;

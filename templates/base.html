@@ -14,6 +14,13 @@
       integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
       crossorigin="anonymous"
     />
+
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&
+    family=League+Spartan:wght@100..900&display=swap" rel="stylesheet">
+
     <title>{% block title %}Registration Form{% endblock %}</title>
 
     <style>
@@ -21,19 +28,8 @@
       body, html {
         height: 100%;
         margin: 0;
-        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        font-family: "Inter", sans-serif;
         background-color: #f4f4f4;
-      }
-
-      .container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: 100vh;
-        background-color: white;
-        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-        padding: 20px;
-        border-radius: 8px;
       }
 
       .bg-black {
@@ -43,15 +39,15 @@
       .card {
         border: none;
         border-radius: 15px;
-    }
-    .btn-primary {
-        background-color: #007bff;
-        border-color: #007bff;
-    }
-    .btn-primary:hover {
-        background-color: #0056b3;
-        border-color: #0056b3;
-    }
+      }
+      .btn-primary {
+          background-color: #007bff;
+          border-color: #007bff;
+      }
+      .btn-primary:hover {
+          background-color: #0056b3;
+          border-color: #0056b3;
+      }
     </style>
 
   {% block extra_css %}{% endblock %}

@@ -2,7 +2,8 @@
 {% load crispy_forms_tags %}
 {% load static %}
 
-{% block title %}Registration Form - Manifest Fellowship Kenya{% endblock %}
+{% block title %}
+{% if is_update %}Update Your Information{% else %}Registration Form{% endif %} - Manifest Fellowship Kenya{% endblock %}
 
 {% block content %}
 <div class="d-flex flex-column min-vh-100">
@@ -11,14 +12,28 @@
     </div>
     <div class="bg-white flex-grow-1 d-flex flex-column justify-content-between" style="border-radius: 30px 30px 0 0;">
         <div class="container py-4">
-            <h5 class="font-weight-bold mb-0">REGISTRATION FORM</h5>
+            <h5 class="font-weight-bold mb-0">
+                {% if is_update %}
+                    Update Your information
+                {% else %}
+                    REGISTRATION FORM
+                {% endif %}
+            </h5>
             <p class="mb-4 mt-4 text-black-50">
                 This is an online registration form for members who are attending the
                 Physical Livestream Centre for Manifest Kenya, Nairobi.
             </p>
 
-            <form method="post" class="needs-validation" novalidate>
+            {% if form.non_field_errors %}
+                <div class="alert alert-danger">
+                    {% for error in form.non_field_errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+            <form method="post" action="{% url 'registration_submit' %}" class="mt-4">
                 {% csrf_token %}
+                <input type="hidden" name="is_update" value="{{ is_update|yesno:'True,False' }}">
 
                 <!-- Name Section -->
                 <div class="form-group text-black-50">
@@ -26,9 +41,15 @@
                     <div class="row">
                         <div class="col-md-6">
                             {{ form.first_name|as_crispy_field }}
+                            {% if form.first_name.errors %}
+                                <div class="text-danger">{{ form.first_name.errors|join:", " }}</div>
+                            {% endif %}
                         </div>
                         <div class="col-md-6">
                             {{ form.last_name|as_crispy_field }}
+                            {% if form.last_name.errors %}
+                                <div class="text-danger">{{ form.last_name.errors|join:", " }}</div>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -45,6 +66,9 @@
                                 </label>
                             </div>
                         {% endfor %}
+                        {% if form.gender.errors %}
+                            <div class="text-danger">{{ form.gender.errors|join:", " }}</div>
+                        {% endif %}
                     </div>
                     
                 </div>
@@ -53,12 +77,18 @@
                 <div class="form-group text-black-50">
                     <label class="font-weight-bold">Phone Number</label>
                     {{ form.phone_number|as_crispy_field }}
+                    {% if form.phone_number.errors %}
+                        <div class="text-danger">{{ form.phone_number.errors|join:", " }}</div>
+                    {% endif %}
                 </div>
 
                 <!-- Residence -->
                 <div class="form-group text-black-50">
                     <label class="font-weight-bold">Residence</label>
                     {{ form.residence|as_crispy_field }}
+                    {% if form.residence.errors %}
+                        <div class="text-danger">{{ form.residence.errors|join:", " }}</div>
+                    {% endif %}
                 </div>
 
                 <!-- Student Status -->
@@ -73,6 +103,9 @@
                                 </label>
                             </div>
                         {% endfor %}
+                        {% if form.is_student.errors %}
+                            <div class="text-danger">{{ form.is_student.errors|join:", " }}</div>
+                        {% endif %}
                     </div>
                 </div>
                 
@@ -81,10 +114,16 @@
                     <div class="form-group text-black-50">
                         <label class="font-weight-bold">Name of Institution</label>
                         {{ form.institution_name|as_crispy_field }}
+                        {% if form.institution_name.errors %}
+                            <div class="text-danger">{{ form.institution_name.errors|join:", " }}</div>
+                        {% endif %}
                     </div>
                     <div class="form-group text-black-50">
                         <label class="font-weight-bold">Location of Institution</label>
                         {{ form.institution_location|as_crispy_field }}
+                        {% if form.institution_location.errors %}
+                            <div class="text-danger">{{ form.institution_location.errors|join:", " }}</div>
+                        {% endif %}
                     </div>
                 </div>
 
@@ -93,6 +132,9 @@
                     <div class="form-group text-black-50">
                         <label class="font-weight-bold">Occupation</label>
                         {{ form.occupation|as_crispy_field }}
+                        {% if form.occupation.errors %}
+                            <div class="text-danger">{{ form.occupation.errors|join:", " }}</div>
+                        {% endif %}
                     </div>
                 </div>
                 
@@ -108,6 +150,9 @@
                                     </label>
                                 </div>
                             {% endfor %}
+                            {% if form.is_first_time.errors %}
+                                <div class="text-danger">{{ form.is_first_time.errors|join:", " }}</div>
+                            {% endif %}
                         </div>
                     <small class="form-text text-muted">Please indicate whether it’s your first time attending the physical livestream.</small>
                 </div>
@@ -137,6 +182,9 @@
                                             </label>
                                         </div>
                                     {% endfor %}
+                                    {% if form.consent.errors %}
+                                        <div class="text-danger">{{ form.consent.errors|join:", " }}</div>
+                                    {% endif %}
                                 </div>
                         </div>
                     </div>
@@ -145,7 +193,9 @@
 
                 <!-- Submit Button -->
                     <div class="text-center">
-                    <button type="submit" class="btn btn-lg btn-warning mt-4 font-weight-bold text-white">Submit</button>
+                    <button type="submit" class="btn btn-lg btn-warning mt-4 font-weight-bold text-white">
+                        {% if is_update %}Update{% else %}Submit{% endif %}
+                    </button>
                     </div>
                 
             </form>
@@ -175,12 +225,9 @@
         background-color: #f79d22;
         border-color: #f79d22;
     }
-    .social-icons a {
-        font-size: 1.5rem;
-        transition: color 0.3s ease;
-    }
-    .social-icons a:hover {
-        color: #007bff !important;
+    .text-danger {
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
     }
 </style>
 {% endblock %}

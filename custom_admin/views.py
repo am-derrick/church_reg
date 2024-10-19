@@ -1,3 +1,9 @@
 from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from members.models import Registration
 
-# Create your views here.
+@login_required
+def admin_dashboard(request):
+    """view for the admin dashboard"""
+    registrations = Registration.objects.all().order_by('-created_at')
+    return render(request, 'custom_admin/dashboard.html', {'registrations': registrations})

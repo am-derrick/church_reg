@@ -1,10 +1,13 @@
 from django import forms
 from .models import Registration
+    
 
-class PhoneNumberForm(forms.Form):
-    """Form for Phone Number"""
-    phone_number = forms.CharField(min_length=10, max_length=12,
-                                   widget=forms.TextInput(attrs={'placeholder': 'Phone Number', 'class': 'form-control'}))
+class NameForm(forms.Form):
+    """Form for Name fields"""
+    first_name = forms.CharField(max_length=100,
+                                 widget=forms.TextInput(attrs={'placeholder': 'First Name', 'class': 'form-control'}))
+    last_name = forms.CharField(max_length=100,
+                                 widget=forms.TextInput(attrs={'placeholder': 'Last Name', 'class': 'form-control'}))
 
 class RegistrationForm(forms.ModelForm):
     """Registration form utilising Django forms"""
@@ -14,8 +17,8 @@ class RegistrationForm(forms.ModelForm):
                 'is_student', 'institution_name', 'institution_location', 'occupation',
                 'is_first_time', 'consent']
         widgets = {
-            'first_name': forms.TextInput(attrs={'placeholder': 'First', 'class': 'form-control'}),
-            'last_name': forms.TextInput(attrs={'placeholder': 'Last', 'class': 'form-control'}),
+            'first_name': forms.TextInput(attrs={'placeholder': 'First Name', 'class': 'form-control'}),
+            'last_name': forms.TextInput(attrs={'placeholder': 'Last Name', 'class': 'form-control'}),
             'gender': forms.RadioSelect(attrs={'class': 'form-check-input'}),
             'phone_number': forms.TextInput(attrs={'placeholder': 'Phone Number', 'class': 'form-control'}),
             'residence': forms.TextInput(attrs={'placeholder': 'This is where you currently live i.e. City, Town, Estate etc.',

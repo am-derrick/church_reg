@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 class Registration(models.Model):
     """Registration form input fields model"""
@@ -13,6 +14,8 @@ class Registration(models.Model):
     occupation = models.CharField(max_length=255, blank=True, null=True)
     is_first_time = models.CharField(max_length=3, choices=[('Yes', 'Yes'), ('No', 'No')])
     consent = models.CharField(max_length=3, choices=[('Yes', 'Yes'), ('No', 'No')])
+    created_at = models.DateTimeField(auto_now_add=True)
+    last_updated = models.DateTimeField(auto_now=True)
     
     def __str__(self):
         return f"{self.first_name} {self.last_name}"

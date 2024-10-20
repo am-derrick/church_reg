@@ -1,9 +1,83 @@
 {% extends 'custom_admin/admin_base.html' %}
+
 {% block title %}Admin Dashboard{% endblock %}
 
+{% block extra_css %}
+<style>
+    .card {
+        border-radius: 0;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1)
+    }
+    .table {
+        margin-bottom: 0;
+    }
+    .table th:last-child, .table td:last-child {
+        border-right: none;
+    }
+    .table thead th {
+        border-bottom: 2px solid #dee2e6;
+        font-weight: 600;
+    }
+    .table-hover tbody tr:hover {
+        background-color: rgba(0, 0, 0, 0.075);
+    }
+</style>
+{% endblock %}
+
 {% block content %}
-<h1 class="mb-4">Admin Dashboard</h1>
-<div class="card">
-    
+<div class="container-fluid">
+    <h1 class="mb-4">Registration Entries</h1>
+    <div class="card">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Gender</th>
+                            <th>Phone Number</th>
+                            <th>Residence</th>
+                            <th>Is Student</th>
+                            <th>Institution Name</th>
+                            <th>Institution Location</th>
+                            <th>Occupation</th>
+                            <th>First Time</th>
+                            <th>Consent</th>
+                            <th>Created At</th>
+                            <th>Last Updated</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for registration in registrations %}
+                        <tr>
+                            <td>{{ registration.first_name }}</td>
+                            <td>{{ registration.last_name }}</td>
+                            <td>{{ registration.gender }}</td>
+                            <td>{{ registration.phone_number }}</td>
+                            <td>{{ registration.residence }}</td>
+                            <td>{{ registration.is_student }}</td>
+                            <td>{{ registration.institution_name|default_if_none:"" }}</td>
+                            <td>{{ registration.institution_location|default_if_none:"" }}</td>
+                            <td>{{ registration.occupation|default_if_none:"" }}</td>
+                            <td>{{ registration.is_first_time}}</td>
+                            <td>{{ registration.consent }}</td>
+                            <td>{{ registration.created_at|date:"d-m-Y H:i" }}</td>
+                            <td>{{ registration.last_updated|date:"d-m-Y H:i" }}</td>
+                            <td>
+                                <button class="btn btn-sm btn-outline-primary">View</button>
+                                <button class="btn btn-sm btn-outline-danger">Delete</button>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="13" class="text-center">No registration entries found.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}

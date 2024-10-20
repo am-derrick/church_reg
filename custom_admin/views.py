@@ -6,4 +6,4 @@ from members.models import Registration
 def admin_dashboard(request):
     """view for the admin dashboard"""
     registrations = Registration.objects.all().order_by('-created_at')
-    return render(request, 'custom_admin/dashboard.html', {'registrations': registrations})
+    return render(request, 'admin_dashboard.html', {'registrations': registrations})

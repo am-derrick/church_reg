@@ -133,3 +133,6 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 # Login settings
 LOGIN_REDIRECT_URL = '/custom_admin/'
 LOGIN_URL = '/custom_admin/login/'
+
+# Custom Admins
+AUTH_USER_MODEL = 'custom_admin.CustomUser'

@@ -75,9 +75,6 @@ document.addEventListener('DOMContentLoaded', function() {
         if (patterns.airtel.test(cleanPhone)) {
             return { isValid: true, message: '✓ Valid number' };
         }
-        if (patterns.telkom.test(cleanPhone)) {
-            return { isValid: true, message: '✓ Valid number' };
-        }
 
         return { isValid: false, message: '⚠️ Please enter a valid phone number' };
     };

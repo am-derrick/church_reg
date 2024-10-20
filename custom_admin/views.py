@@ -35,6 +35,7 @@ def admin_dashboard(request):
     registrations = Registration.objects.all().order_by('-created_at')
     return render(request, 'custom_admin/admin_dashboard.html', {'registrations': registrations})
 
+@login_required
 def user_list(request):
     """displays list for all users(admins)"""
     users = User.objects.all().order_by('-date_joined')

@@ -19,18 +19,18 @@ def registration_view(request):
             
             if registration_data.exists():
                 # If name exists, render the confirmation page
-                return render(request, 'name_confirmation.html', {
+                return render(request, 'members/name_confirmation.html', {
                     'first_name': first_name,
                     'last_name': last_name
                 })
             else:
                 # If name doesn't exist, show the full registration form
                 form = RegistrationForm(initial={'first_name': first_name, 'last_name': last_name})
-                return render(request, 'registration.html', {'form': form})
+                return render(request, 'members/registration.html', {'form': form})
     else:
         name_form = NameForm()
 
-    return render(request, 'name_form.html', {'form': name_form})
+    return render(request, 'members/name_form.html', {'form': name_form})
 
 
 def registration_confirm(request):
@@ -49,11 +49,11 @@ def registration_confirm(request):
                     Q(first_name__iexact=first_name) & Q(last_name__iexact=last_name)
                 )
                 form = RegistrationForm(instance=registration)
-                return render(request, 'registration.html', {'form': form, 'is_update': True})
+                return render(request, 'members/registration.html', {'form': form, 'is_update': True})
             elif action == 'new':
                 # Start a new registration
                 form = RegistrationForm(initial={'first_name': first_name, 'last_name': last_name})
-                return render(request, 'registration.html', {'form': form})
+                return render(request, 'members/registration.html', {'form': form})
             
         return redirect('register')
 
@@ -77,11 +77,11 @@ def registration_submit(request):
             return redirect(reverse('welcome', kwargs={'first_name': registration.first_name}))
         else:
             # If form is not valid, re-render page with errors
-            return render(request, 'registration.html', {'form': form, 'is_update': is_update})
+            return render(request, 'members/registration.html', {'form': form, 'is_update': is_update})
     
     return redirect('register')
 
 
 def welcome_view(request, first_name):
     """Thank you page view, displayed after registration"""
-    return render(request, 'welcome.html', {'first_name': first_name})
+    return render(request, 'members/welcome.html', {'first_name': first_name})

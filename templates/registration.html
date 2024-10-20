@@ -60,7 +60,6 @@
                         <label class="font-weight-bold">Phone Number</label>
                         {{ form.phone_number|as_crispy_field }}
                     </div>
-
                     <!-- Residence -->
                     <div class="form-group">
                         <label class="font-weight-bold">Residence</label>
@@ -166,8 +165,9 @@
         </div>
     </div>
 </div>
-
+<!--Link to scripts used-->
 <script src="{% static 'scripts/form_handler.js' %}"></script>
+<script src="{% static 'scripts/number_validator.js' %}"></script>
 
 {% endblock %}
 

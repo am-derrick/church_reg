@@ -13,7 +13,7 @@ class RegistrationForm(forms.ModelForm):
     """Registration form utilising Django forms"""
     class Meta:
         model = Registration
-        fields = ['first_name', 'last_name', 'gender', 'phone_number', 'residence',
+        fields = ['first_name', 'last_name', 'gender', 'phone_number','email', 'residence',
                 'is_student', 'institution_name', 'institution_location', 'occupation',
                 'is_first_time', 'consent']
         widgets = {
@@ -21,6 +21,7 @@ class RegistrationForm(forms.ModelForm):
             'last_name': forms.TextInput(attrs={'placeholder': 'Last Name', 'class': 'form-control'}),
             'gender': forms.RadioSelect(attrs={'class': 'form-check-input'}),
             'phone_number': forms.TextInput(attrs={'placeholder': 'Phone Number', 'class': 'form-control'}),
+            'email': forms.EmailInput(attrs={'placeholder': 'Please enter a valid email ', 'class': 'form-control'}),
             'residence': forms.TextInput(attrs={'placeholder': 'This is where you currently live i.e. City, Town, Estate etc.',
                                                 'class': 'form-control'}),
             'is_student': forms.RadioSelect(attrs={'class': 'form-check-input'}),
@@ -35,6 +36,7 @@ class RegistrationForm(forms.ModelForm):
             'last_name': '',
             'gender': '',
             'phone_number': '',
+            'email': '',
             'residence': '',
             'is_student': '',
             'institution_name': '',
@@ -43,6 +45,7 @@ class RegistrationForm(forms.ModelForm):
             'is_first_time': '',
             'consent': '',
         }
+
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

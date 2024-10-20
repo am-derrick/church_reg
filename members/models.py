@@ -6,6 +6,7 @@ class Registration(models.Model):
     last_name = models.CharField(max_length=100)
     gender = models.CharField(max_length=6, choices=[('Male', 'Male'), ('Female', 'Female')])
     phone_number = models.CharField(max_length=12, unique=True)
+    email = models.EmailField(max_length=255, blank=True, null=True)
     residence = models.CharField(max_length=255)
     is_student = models.CharField(max_length=3, choices=[('Yes', 'Yes'), ('No', 'No')])
     institution_name = models.CharField(max_length=255, blank=True, null=True)

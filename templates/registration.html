@@ -82,6 +82,15 @@
                     {% endif %}
                 </div>
 
+                <!-- email Section -->
+                <div class="form-group text-black-50">
+                    <label class="font-weight-bold">Email Address</label>
+                    {{ form.email|as_crispy_field }}
+                    {% if form.email.errors %}
+                        <div class="text-danger">{{ form.email.errors|join:", " }}</div>
+                    {% endif %}
+                </div>
+
                 <!-- Residence -->
                 <div class="form-group text-black-50">
                     <label class="font-weight-bold">Residence</label>
@@ -210,6 +219,8 @@
 </div>
 
 <script src="{% static 'scripts/form_handler.js' %}"></script>
+<script src="{% static 'scripts/number_validator.js' %}"></script>
+<script src="{% static 'scripts/email_validator.js' %}"></script>
 
 {% endblock %}
 

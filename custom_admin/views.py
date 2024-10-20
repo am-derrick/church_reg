@@ -1,7 +1,6 @@
 from .utils import super_admin_required, admin_required
 from .forms import CustomUserCreationForm, CustomUserChangeForm
 from django.contrib.auth import get_user_model
-from django.contrib.admin.decorators import user_passes_test
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required

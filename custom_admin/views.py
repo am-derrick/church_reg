@@ -1,3 +1,4 @@
+from .utils import super_admin_required, admin_required
 from .forms import CustomUserCreationForm, CustomUserChangeForm
 from django.contrib.auth import get_user_model
 from django.contrib.admin.decorators import user_passes_test
@@ -35,16 +36,12 @@ def admin_dashboard(request):
     registrations = Registration.objects.all().order_by('-created_at')
     return render(request, 'custom_admin/admin_dashboard.html', {'registrations': registrations})
 
-def is_super_admin(user):
-    return user.is_authenticated and user.is_super_admin()
-
-@user_passes_test(is_super_admin)
 def user_list(request):
     """displays list for all users(admins)"""
     users = User.objects.all().order_by('-date_joined')
     return render(request, 'custom_admin/user_list.html', {'users': users})
 
-@user_passes_test(is_super_admin)
+@admin_required
 def user_create(request):
     """super user creates admins"""
     if request.method == 'POST':
@@ -57,7 +54,7 @@ def user_create(request):
         form = CustomUserCreationForm()
     return render(request, 'custom_admin/user_form.html', {'form': form})
 
-@user_passes_test(is_super_admin)
+@admin_required
 def user_edit(request, user_id):
     """super user edits users"""
     user = get_object_or_404(User, id=user_id)
@@ -71,7 +68,7 @@ def user_edit(request, user_id):
         form = CustomUserChangeForm(instance=user)
     return render(request, 'custom_admin/user_form.html', {'form': form})
 
-@user_passes_test(is_super_admin)
+@super_admin_required
 def user_deactivate(request, user_id):
     """super user deletes/deactivates other users"""
     user = get_object_or_404(User, id=user_id)

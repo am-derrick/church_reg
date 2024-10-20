@@ -1,8 +1,22 @@
+from django.contrib.auth.forms import UserCreationForm
+from django.urls import reverse_lazy
+from django.views import generic
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from members.models import Registration
+
+class SignUpView(generic.CreateView):
+    """sign up view created with Django generic views"""
+    form_class = UserCreationForm
+    success_url = reverse_lazy('login')
+    template_name = 'custom_admin/signup.html'
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        messages.success(self.request, 'Account created successfully. You can now log in.')
+        return response
 
 def login_view(request):
     """login view"""

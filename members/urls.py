@@ -1,9 +1,12 @@
+"""Module for URL routing for the registration app."""
 from django.urls import path
 from . import views
 
 urlpatterns = [
     path('register/', views.registration_view, name='register'),
-    path('register/confirm/', views.registration_confirm, name='registration_confirm'),
-    path('register/submit/', views.registration_submit, name='registration_submit'),
+    path('register/confirm/', views.registration_confirm,
+         name='registration_confirm'),
+    path('register/submit/', views.registration_submit,
+         name='registration_submit'),
     path('welcome/<str:first_name>/', views.welcome_view, name='welcome'),
 ]

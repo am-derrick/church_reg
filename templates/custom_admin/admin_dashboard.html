@@ -3,189 +3,277 @@
 {% block extra_css %}
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <style>
-    body, html {
-        height: 100%;
-    }
-    .full-height {
-        min-height: calc(100vh - 56px);
-    }
-    .card {
-        border-radius: 0;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        height: 100;
-    }
-    .card-body {
-        padding: 0;
-    }
+    /* Table Styles */
     .table-container {
-        overflow-y: auto;
-        max-height: calc(100vh - 200px);
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+        overflow: hidden;
     }
     .table {
         margin-bottom: 0;
+        font-size: 0.875rem;
     }
-    .table th, .table td {
-        border-right: 1px solid #dee2e6;
-        padding: 0.75rem;
-        vertical-align: middle;
+    .table th {
+        background-color: #f8f9fa;
+        border-bottom: 2px solid var(--border-color);
+        font-weight: 600;
+        color: var(--primary-black);
+        padding: 1rem 0.75rem;
         white-space: nowrap;
     }
-    .table th:last-child, .table td:last-child {
-        border-right: none;
+    .table td {
+        vertical-align: middle;
+        color: #4a5568;
+        padding: 0.75rem;
+        max-width: 200px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
-    .table thead th {
-        position: sticky;
-        top: 0;
+    .table tbody tr {
+        transition: all 0.2s ease;
+        height: 48px;
+    }
+    .table tbody tr:hover {
         background-color: #f8f9fa;
-        z-index: 1;
-        border-bottom: 2px solid #dee2e6;
-        font-weight: 600;
     }
-    .table-hover tbody tr:hover {
-        background-color: rgba(0, 0, 0, 0.075);
+
+    /* Status Badges */
+    .status-badge {
+        padding: 0.25rem 0.75rem;
+        border-radius: 50px;
+        font-size: 0.875rem;
+        font-weight: 500;
     }
+    .status-active {
+        background-color: #def7ec;
+        color: #03543f;
+    }
+
+    /* Search and Filters */
+    .filters-section {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 12px;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+    }
+    .filters-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        align-items: end;
+    }
+    .filter-item {
+        flex: 1;
+        min-width: 200px;
+        gap: 0.5rem;
+    }
+    .filter-item label {
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: #4a5568;
+    }
+    .filter-item input, .filter-item select{
+        padding: 0.5rem;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        outline: none;
+        font-size: 0.875rem;
+    }
+
+    /* Pagination */
     .pagination {
-        justify-content: center;
-        padding: 1rem;
-        background-color: #f8f9fa;
-        border-top: 1px solid #dee2e6;
+        margin: 1rem 0;
+        gap: 0.5rem;
+    }
+    .page-link {
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        color: var(--primary-black);
+        transition: all 0.2s ease;
+        font-size: 0.875rem;
+    }
+    .page-item.active .page-link {
+        background-color: var(--primary-orange);
+        color: white;
+    }
+
+    /* Action Buttons */
+    .btn-action {
+        padding: 0.25rem 0.75rem;
+        border-radius: 6px;
+        font-size: 0.875rem;
+        margin: 0 0.25rem;
+    }
+    .btn-view {
+        background-color: #e2e8f0;
+        color: var(--primary-black);
+    }
+    .btn-delete {
+        background-color: #fee2e2;
+        color: #991b1b;
+    }
+
+    /* Table Scroll */
+    .table-responsive {
+        max-height: calc(100vh - 300px);
+        overflow-y: auto;
+    }
+
+    /* Tooltips for truncated content */
+    .cell-content {
+        position: relative;
+        cursor: default;
+    }
+
+    .cell-content:hover::after {
+        content: attr(data-full-text);
+        position: absolute;
+        bottom: 100%;
+        left: 0;
+        background: #333;
+        color: white;
+        padding: 0.5rem;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        white-space: normal;
+        max-width: 300px;
+        z-index: 1000;
     }
 </style>
 {% endblock %}
 
 {% block content %}
 <div class="container-fluid">
-    <h1 class="mb-4">Registration Entries</h1>
-    <div class="card">
-        <div class="card-body">
-            <div class="search-bar">
-                <form method="get" class="form-inline mb-2">
-                    <input type="text" name="search" class="form-control mr-3"
-                    placeholder="🔎 Search..." value="{{ request.GET.search }}">
-                    <input type="text" name="date_range" class="form-control mr-3"
-                    id="date-range" placeholder="Date Range">
-                    <button type="submit" class="btn btn-primary">Search</button>
-                </form>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0">Registration Entries</h1>
+        <button class="btn btn-primary">Export Data</button>
+    </div>
+
+    <div class="filters-section">
+        <div class="filters-container">
+            <div class="filter-item">
+                <label>Search</label>
+                <input type="text" name="search" class="form-control" 
+                       placeholder="Search in all fields..." value="{{ request.GET.search }}">
             </div>
-            <div class="table-responsive">
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th>First Name</th>
-                            <th>Last Name</th>
-                            <th>Gender</th>
-                            <th>Phone Number</th>
-                            <th>Residence</th>
-                            <th>Is Student</th>
-                            <th>Institution Name</th>
-                            <th>Institution Location</th>
-                            <th>Occupation</th>
-                            <th>First Time</th>
-                            <th>Consent</th>
-                            <th>Created At</th>
-                            <th>Last Updated</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for registration in registrations %}
-                        <tr>
-                            <td>{{ registration.first_name }}</td>
-                            <td>{{ registration.last_name }}</td>
-                            <td>{{ registration.gender }}</td>
-                            <td>{{ registration.phone_number }}</td>
-                            <td>{{ registration.residence }}</td>
-                            <td>{{ registration.is_student }}</td>
-                            <td>{{ registration.institution_name|default_if_none:"" }}</td>
-                            <td>{{ registration.institution_location|default_if_none:"" }}</td>
-                            <td>{{ registration.occupation|default_if_none:"" }}</td>
-                            <td>{{ registration.is_first_time}}</td>
-                            <td>{{ registration.consent }}</td>
-                            <td>{{ registration.created_at|date:"d-m-Y H:i" }}</td>
-                            <td>{{ registration.last_updated|date:"d-m-Y H:i" }}</td>
-                            <td>
-                                <button class="btn btn-sm btn-outline-primary">View</button>
-                                <button class="btn btn-sm btn-outline-danger">Delete</button>
-                            </td>
-                        </tr>
-                        {% empty %}
-                        <tr>
-                            <td colspan="13" class="text-center">No registration entries found.</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+            <div class="filter-item">
+                <label>Date Range</label>
+                <input type="text" name="date_range" class="form-control"
+                       id="date-range" placeholder="Select dates">
             </div>
-            {% if registrations.has_other_pages %}
-            <nav aria-label="Page navigation">
-                <ul class="pagination justify-content-center">
+            <div class="filter-item">
+                <label>Status</label>
+                <select class="form-control">
+                    <option value="">All Status</option>
+                    <option value="student">Students Only</option>
+                    <option value="first_time">First Time Only</option>
+                </select>
+            </div>
+            <div class="filter-item">
+                <button type="submit" class="btn btn-primary w-20">Apply Filters</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-container">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Gender</th>
+                        <th>Phone Number</th>
+                        <th>Residence</th>
+                        <th>Student</th>
+                        <th>Institution Name</th>
+                        <th>Institution Location</th>
+                        <th>Occupation</th>
+                        <th>First Time</th>
+                        <th>Consent</th>
+                        <th>Created At</th>
+                        <th>Last Updated</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for registration in registrations %}
+                    <tr>
+                        <td>{{ registration.first_name }}</td>
+                        <td>{{ registration.last_name }}</td>
+                        <td>{{ registration.gender }}</td>
+                        <td>{{ registration.phone_number }}</td>
+                        <td>{{ registration.residence }}</td>
+                        <td>{{ registration.is_student }}</td>
+                        <td>{{ registration.institution_name|default_if_none:"-" }}</td>
+                        <td>{{ registration.institution_location|default_if_none:"-" }}</td>
+                        <td>{{ registration.occupation|default_if_none:"-" }}</td>
+                        <td>{{ registration.is_first_time}}</td>
+                        <td>{{ registration.consent }}</td>
+                        <td>{{ registration.created_at|date:"d-m-Y H:i" }}</td>
+                        <td>{{ registration.last_updated|date:"d-m-Y H:i" }}</td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-primary">View</button>
+                            <button class="btn btn-sm btn-outline-danger">Delete</button>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="13" class="text-center">No registration entries found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    
+        {% if registrations.has_other_pages %}
+            <nav aria-label="Page navigation" class="p-3 border-top">
+                <ul class="pagination justify-content-center mb-0">
                     {% if registrations.has_previous %}
                     <li class="page-item">
-                        <a class="page-link" href="?page={{ registrations.previous_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.date_range %}&date_range={{ request.GET.date_range }}{% endif %}{% if order_by %}&order_by={{ order_by }}{% endif %}" aria-label="Previous">
-                            <span aria-hidden="true">&laquo;</span>
+                        <a class="page-link" href="?page={{ registrations.previous_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">
+                            Previous
                         </a>
                     </li>
-                    {% else %}
-                    <li class="page-item disabled">
-                        <span class="page-link" aria-hidden="true">&laquo;</span>
-                    </li>
                     {% endif %}
-
+    
                     {% for page_num in page_range %}
                         {% if page_num == '...' %}
-                        <li class="page-item disabled">
-                            <span class="page-link">...</span>
-                        </li>
+                        <li class="page-item disabled"><span class="page-link">...</span></li>
                         {% else %}
                         <li class="page-item {% if page_num == registrations.number %}active{% endif %}">
-                            <a class="page-link" href="?page={{ page_num }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.date_range %}&date_range={{ request.GET.date_range }}{% endif %}{% if order_by %}&order_by={{ order_by }}{% endif %}">{{ page_num }}</a>
+                            <a class="page-link" href="?page={{ page_num }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">
+                                {{ page_num }}
+                            </a>
                         </li>
                         {% endif %}
                     {% endfor %}
-
+    
                     {% if registrations.has_next %}
                     <li class="page-item">
-                        <a class="page-link" href="?page={{ registrations.next_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}{% if request.GET.date_range %}&date_range={{ request.GET.date_range }}{% endif %}{% if order_by %}&order_by={{ order_by }}{% endif %}" aria-label="Next">
-                            <span aria-hidden="true">&raquo;</span>
+                        <a class="page-link" href="?page={{ registrations.next_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">
+                            Next
                         </a>
-                    </li>
-                    {% else %}
-                    <li class="page-item disabled">
-                        <span class="page-link" aria-hidden="true">&raquo;</span>
                     </li>
                     {% endif %}
                 </ul>
             </nav>
             {% endif %}
+            </div>
         </div>
     </div>
 </div>
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+    flatpickr("#date-range", {
+        mode: "range",
+        dateFormat: "Y-m-d",
+        placeholder: "Select date range"
+    });
+</script>
 {% endblock %}
-
-<style>
-.pagination {
-    margin: 20px 0;
-}
-.page-link {
-    color: #007bff;
-    background-color: #fff;
-    border: 1px solid #dee2e6;
-    padding: 0.5rem 0.75rem;
-}
-.page-item.active .page-link {
-    background-color: #007bff;
-    border-color: #007bff;
-    color: #fff;
-}
-.page-item.disabled .page-link {
-    color: #6c757d;
-    pointer-events: none;
-    background-color: #fff;
-    border-color: #dee2e6;
-}
-.page-link:hover {
-    color: #0056b3;
-    text-decoration: none;
-    background-color: #e9ecef;
-    border-color: #dee2e6;
-}
-</style>
+{% endblock %}

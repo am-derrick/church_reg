@@ -1,4 +1,5 @@
-from django.core.paginator import Paginator
+from .utils import get_page_range
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db.models import Q
 from datetime import datetime
 from .utils import super_admin_required, admin_required
@@ -56,14 +57,22 @@ def admin_dashboard(request):
         registrations = registrations.filter(created_at__range=[start_date, end_date])
 
     registrations = registrations.order_by(order_by)
-
-    paginator = Paginator(registrations, 20) # Show 20 registraions per page
+    paginator = Paginator(registrations, 25)
     page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
+
+    try:
+        page_obj = paginator.get_page(page_number)
+    except PageNotAnInteger:
+        page_obj = paginator.get_page(1)
+    except EmptyPage:
+        page_obj = paginator.get_page(paginator.num_pages)
+
+    page_range = get_page_range(paginator, page_obj)
 
     context = {
         'registrations': page_obj,
         'order_by': order_by,
+        'page_range': page_range
     }
 
     return render(request, 'custom_admin/admin_dashboard.html', context )

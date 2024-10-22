@@ -1,3 +1,6 @@
+from django.core.paginator import Paginator
+from django.db.models import Q
+from datetime import datetime
 from .utils import super_admin_required, admin_required
 from .forms import CustomUserCreationForm, CustomUserChangeForm
 from django.contrib.auth import get_user_model
@@ -31,9 +34,39 @@ def logout_view(request):
 
 @login_required
 def admin_dashboard(request):
-    """view for the admin dashboard"""
-    registrations = Registration.objects.all().order_by('-created_at')
-    return render(request, 'custom_admin/admin_dashboard.html', {'registrations': registrations})
+    """view for the admin dashboard with pagination"""
+    order_by = request.GET.get('order_by', '-created_at')
+    search_query = request.GET.get('search', '')
+    date_range = request.GET.get('date_range', '')
+
+    registrations = Registration.objects.all()
+
+    if search_query:
+        registrations = registrations.filter(
+            Q(first_name__icontains=search_query) |
+            Q(last_name__icontains=search_query) |
+            Q(phone_number__icontains=search_query) |
+            Q(residence__icontains=search_query)
+        )
+
+    if date_range:
+        start_date, end_date = date_range.split(' to ')
+        start_date = datetime.strptime(start_date, '%d-%m-%Y')
+        end_date = datetime.strptime(end_date, '%d-%m-%Y')
+        registrations = registrations.filter(created_at__range=[start_date, end_date])
+
+    registrations = registrations.order_by(order_by)
+
+    paginator = Paginator(registrations, 20) # Show 20 registraions per page
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        'registrations': page_obj,
+        'order_by': order_by,
+    }
+
+    return render(request, 'custom_admin/admin_dashboard.html', context )
 
 @login_required
 def user_list(request):

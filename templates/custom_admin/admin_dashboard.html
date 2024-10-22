@@ -1,8 +1,7 @@
 {% extends 'custom_admin/admin_base.html' %}
 
-{% block title %}Admin Dashboard{% endblock %}
-
 {% block extra_css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 <style>
     .card {
         border-radius: 0;
@@ -28,7 +27,16 @@
 <div class="container-fluid">
     <h1 class="mb-4">Registration Entries</h1>
     <div class="card">
-        <div class="card-body p-0">
+        <div class="card-body">
+            <div class="search-bar">
+                <form method="get" class="form-inline mb-2">
+                    <input type="text" name="search" class="form-control mr-3"
+                    placeholder="🔎 Search..." value="{{ request.GET.search }}">
+                    <input type="text" name="date_range" class="form-control mr-3"
+                    id="date-range" placeholder="Date Range">
+                    <button type="submit" class="btn btn-primary">Search</button>
+                </form>
+            </div>
             <div class="table-responsive">
                 <table class="table table-hover">
                     <thead>
@@ -77,7 +85,51 @@
                     </tbody>
                 </table>
             </div>
+            {% if registration.has_other_pages %}
+            <nav aria-label="Page navigation">
+                <ul class="pagination">
+                    {% if registration.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ registrations.previous_page_number }}
+                        {% if request.GET.search %}&search={{ request.GET.search }}{% endif %}
+                        {% if request.GET.date_range %}&date_range={{ request.GET.date_range }}{%endif %}
+                        {% if order_by %}&order_by={{ order_by }}{% endif %}">Previous</a>
+                    </li>
+                    {% endif %}
+                    {% for i in registrations.paginator.page_range %}
+                    {% if registrations.number == i %}
+                    <li class="page-item active"><span class="page-link">{{ i }}</span></li>
+                    {% else %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page{{ i }}
+                        {% if request.GET.search %}&search={{ request.GET.search }}{% endif %}
+                        {% if request.GET.date_range %}&date_range={{ request.GET.date_range }}{%endif %}
+                        {% if order_by %}&order_by={{ order_by }}{% endif %}">{{ i }}</a>
+                    </li>
+                    {% endif %}
+                    {% endfor %}
+                    {% if registrations.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ registrations.next_page_number }}
+                        {% if request.GET.search %}&search={{ request.GET.search }}{% endif %}
+                        {% if request.GET.date_range %}&date_range={{ request.GET.date_range }}{%endif %}
+                        {% if order_by %}&order_by={{ order_by }}{% endif %}">Next</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% endif %}
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+    flatpickr("#date-range", {
+        mode: "range",
+        dateFormat: "Y-m-d",
+    });
+</script>
 {% endblock %}

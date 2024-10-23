@@ -39,22 +39,38 @@ def admin_dashboard(request):
     order_by = request.GET.get('order_by', '-created_at')
     search_query = request.GET.get('search', '')
     date_range = request.GET.get('date_range', '')
+    status_filter = request.GET.get('status', '')
 
     registrations = Registration.objects.all()
 
+    # Search filter
     if search_query:
         registrations = registrations.filter(
             Q(first_name__icontains=search_query) |
             Q(last_name__icontains=search_query) |
             Q(phone_number__icontains=search_query) |
-            Q(residence__icontains=search_query)
+            Q(residence__icontains=search_query) |
+            Q(institution_name__icontains=search_query) |
+            Q(occupation__icontains=search_query)
         )
 
+    # Date range filter
     if date_range:
-        start_date, end_date = date_range.split(' to ')
-        start_date = datetime.strptime(start_date, '%d-%m-%Y')
-        end_date = datetime.strptime(end_date, '%d-%m-%Y')
-        registrations = registrations.filter(created_at__range=[start_date, end_date])
+        try:
+            start_date, end_date = date_range.split(' to ')
+            start_date = datetime.strptime(start_date, '%d-%m-%Y')
+            end_date = datetime.strptime(end_date, '%d-%m-%Y')
+            end_date = end_date.replace(hour=23, minute=59, second=59) # Time components to ensure full day coverage
+            registrations = registrations.filter(created_at__range=[start_date, end_date])
+        except (ValueError, AttributeError):
+            messages.error(request, 'Invalid date range format.')
+
+    # Status filter
+    if status_filter:
+        if status_filter == 'student':
+            registrations = registrations.filter(is_student=True)
+        elif status_filter == 'first_time':
+            registrations = registrations.filter(is_first_time=True)
 
     registrations = registrations.order_by(order_by)
     paginator = Paginator(registrations, 25)
@@ -72,7 +88,10 @@ def admin_dashboard(request):
     context = {
         'registrations': page_obj,
         'order_by': order_by,
-        'page_range': page_range
+        'page_range': page_range,
+        'search_query': search_query,
+        'date_range': date_range,
+        'status_filter': status_filter
     }
 
     return render(request, 'custom_admin/admin_dashboard.html', context )

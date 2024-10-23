@@ -5,7 +5,9 @@ from django.utils.text import slugify
 from datetime import datetime
 from django.utils.timezone import make_aware
 from members.models import Registration
+from .utils import permission_required, is_admin
 
+@permission_required(is_admin)
 def export_registrations_csv(request):
     """Export registrations to CSV with filter options"""
     order_by = request.GET.get('order_by', '-created_at')

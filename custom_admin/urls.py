@@ -10,5 +10,8 @@ urlpatterns = [
     path('users/create/', views.user_create, name='user_create'),
     path('users/<int:user_id>/edit/', views.user_edit, name='user_edit'),
     path('users/<int:user_id>/deactivate/', views.user_deactivate, name='user_deactivate'),
-    path('export-registration/', export.export_registrations_csv, name='export_registrations_csv')
+    path('export-registration/', export.export_registrations_csv, name='export_registrations_csv'),
+    path('registration/<int:registration_id>/', views.registration_detail, name='registration_detail'),
+    path('registration/<int:registration_id>/delete', views.delete_registration,
+         name='delete_registration'),
 ]

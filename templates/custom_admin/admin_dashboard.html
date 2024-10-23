@@ -249,8 +249,10 @@
                         <th>First Name</th>
                         <th>Last Name</th>
                         <th>Gender</th>
+                        {% if is_admin %}
                         <th>Phone Number</th>
                         <th>Residence</th>
+                        {% endif %}
                         <th>Student</th>
                         <th>Institution Name</th>
                         <th>Institution Location</th>
@@ -267,8 +269,10 @@
                         <td>{{ registration.first_name }}</td>
                         <td>{{ registration.last_name }}</td>
                         <td>{{ registration.gender }}</td>
+                        {% if is_admin %}
                         <td>{{ registration.phone_number }}</td>
                         <td>{{ registration.residence }}</td>
+                        {% endif %}
                         <td>{{ registration.is_student }}</td>
                         <td>{{ registration.institution_name|default_if_none:"-" }}</td>
                         <td>{{ registration.institution_location|default_if_none:"-" }}</td>
@@ -278,8 +282,15 @@
                         <td>{{ registration.created_at|date:"d-m-Y H:i" }}</td>
                         <td>{{ registration.last_updated|date:"d-m-Y H:i" }}</td>
                         <td>
-                            <button class="btn btn-sm btn-primary">View</button>
-                            <button class="btn btn-sm btn-danger">Delete</button>
+                            <a href="{% url 'registration_detail' registration.id %}" class="btn btn-sm btn-primary">View</a>
+                            {% if is_super_admin %}
+                            <form method="POST" action="{% url 'delete_registration' registration.id %}" 
+                                  style="display: inline;" 
+                                  onsubmit="return confirm('Are you sure you want to delete this registration?');">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                            </form>
+                            {% endif %}
                         </td>
                     </tr>
                     {% empty %}

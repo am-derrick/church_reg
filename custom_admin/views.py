@@ -11,6 +11,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from members.models import Registration
+from django.http import HttpResponseForbidden
 
 
 User = get_user_model()
@@ -93,7 +94,9 @@ def admin_dashboard(request):
         'page_range': page_range,
         'search_query': search_query,
         'date_range': date_range,
-        'status_filter': status_filter
+        'status_filter': status_filter,
+        'is_admin': is_admin(request.user),
+        'is_super_admin': is_super_admin(request.user)
     }
 
     return render(request, 'custom_admin/admin_dashboard.html', context )
@@ -145,3 +148,32 @@ def user_deactivate(request, user_id):
     user.save()
     messages.success(request, 'User deactivated succesfully.')
     return redirect('user_list')
+
+@login_required
+def registration_detail(request, registration_id):
+    """View for differnent admin registraion details"""
+    registration = get_object_or_404(Registration, id=registration_id)
+
+    # If user  is regular user, hide senstitive information
+    if not is_admin(request.user):
+        registration.phone_number = "**********"
+        registration.residence = "Hidden"
+
+    context = {
+        'registration': registration,
+        'is_admin': is_admin(request.user),
+        'is_super_admin': is_super_admin(request.user)
+    }
+
+    return render(request, 'custom_admin/registration_detail.html', context)
+
+@login_required
+@permission_required(is_super_admin)
+def delete_registration(request, registration_id):
+    """Delete registration entry, available for only super admin"""
+    registration = get_object_or_404(Registration, id=registration_id)
+    if request.method == 'POST':
+        registration.delete()
+        messages.success(request, 'Registration entry deleted successfully.')
+        return redirect('admin_dashboard')
+    return HttpResponseForbidden()

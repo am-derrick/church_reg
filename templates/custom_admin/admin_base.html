@@ -171,6 +171,19 @@
             stroke-linejoin: round;
             fill: none;
         }
+
+        /* Error Messages */
+        .messages-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1050;
+            max-width: 400px;
+        }
+        .alert {
+            margin-bottom: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
     </style>
     {% block extra_css %}{% endblock %}
     {% load static %}
@@ -247,6 +260,10 @@
 
     <!-- Main Content -->
     <div class="main-content" id="mainContent">
+        <!-- Error Messages -->
+         <div class="container-fluid py-3">
+            {% include 'custom_admin/messages.html' %}
+         </div>
         <!-- Page Content -->
         <div class="container-fluid mt-4">
             {% block content %}{% endblock %}

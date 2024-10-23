@@ -2,7 +2,7 @@ from .utils import get_page_range
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db.models import Q
 from datetime import datetime
-from .utils import super_admin_required, admin_required
+from .utils import permission_required, is_super_admin, is_admin
 from .forms import CustomUserCreationForm, CustomUserChangeForm
 from django.contrib.auth import get_user_model
 from django.shortcuts import render, redirect, get_object_or_404
@@ -102,7 +102,8 @@ def user_list(request):
     users = User.objects.all().order_by('-date_joined')
     return render(request, 'custom_admin/user_list.html', {'users': users})
 
-@admin_required
+@login_required
+@permission_required(is_admin)
 def user_create(request):
     """super user creates admins"""
     if request.method == 'POST':
@@ -115,7 +116,8 @@ def user_create(request):
         form = CustomUserCreationForm()
     return render(request, 'custom_admin/user_form.html', {'form': form})
 
-@admin_required
+@login_required
+@permission_required(is_admin)
 def user_edit(request, user_id):
     """super user edits users"""
     user = get_object_or_404(User, id=user_id)
@@ -129,10 +131,14 @@ def user_edit(request, user_id):
         form = CustomUserChangeForm(instance=user)
     return render(request, 'custom_admin/user_form.html', {'form': form})
 
-@super_admin_required
+@login_required
+@permission_required(is_super_admin)
 def user_deactivate(request, user_id):
-    """super user deletes/deactivates other users"""
+    """super user deactivates other users"""
     user = get_object_or_404(User, id=user_id)
+    if user == request.user:
+        messages.error(request, "You cannot deactivate your own account.")
+        return redirect('user_list')
     user.is_active = False
     user.save()
     messages.success(request, 'User deactivated succesfully.')

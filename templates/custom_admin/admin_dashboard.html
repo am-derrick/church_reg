@@ -158,23 +158,24 @@
             <div class="filter-item">
                 <label>Search</label>
                 <input type="text" name="search" class="form-control" 
-                       placeholder="Search in all fields..." value="{{ request.GET.search }}">
+                       placeholder="Search in all fields..." value="{{ search_query }}">
             </div>
             <div class="filter-item">
                 <label>Date Range</label>
                 <input type="text" name="date_range" class="form-control"
-                       id="date-range" placeholder="Select dates">
+                       id="date-range" placeholder="Select dates" value="{{ date_range }}">
             </div>
             <div class="filter-item">
                 <label>Status</label>
-                <select class="form-control">
+                <select class="form-control" name="status">
                     <option value="">All Status</option>
-                    <option value="student">Students Only</option>
-                    <option value="first_time">First Time Only</option>
+                    <option value="student" {% if status_filter == 'student' %}selected{% endif %}>Students Only</option>
+                    <option value="first_time" {% if status_filter == 'first_time' %}selected{% endif %}>First Time Only</option>
                 </select>
             </div>
             <div class="filter-item">
                 <button type="submit" class="btn btn-primary w-20">Apply Filters</button>
+                <a href="{% url 'admin_dashboard' %}" class="btn btn-secondary w-20">Clear Filters</a>
             </div>
         </div>
     </div>
@@ -272,7 +273,8 @@
     flatpickr("#date-range", {
         mode: "range",
         dateFormat: "d-m-Y",
-        placeholder: "Select date range"
+        placeholder: "Select date range",
+        defaultDate: "{{ date_range|default:'' }}".split(" to "),
     });
 </script>
 {% endblock %}

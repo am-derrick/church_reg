@@ -1,17 +1,24 @@
-from django.contrib.auth.decorators import user_passes_test
+from django.contrib import messages
+from django.shortcuts import redirect
 
-def super_admin_required(view_func):
-    """decorator for super_admin access"""
-    decorated_view_func = user_passes_test(lambda u: u.is_authenticated and u.is_super_admin(),
-                                           login_url='login')(view_func)
-    return decorated_view_func
+def permission_required(permission_func):
+    """decorator to check for permission of user or else display that they don't have access"""
+    def decorator(view_func):
+        def wrapped_view(request, *args, **kwargs):
+            if permission_func(request.user):
+                return view_func(request, *args, **kwargs)
+            messages.error(request, "You don't have permission to perform this action.")
+            return redirect('admin_dashboard')
+        return wrapped_view
+    return decorator
 
-def admin_required(view_func):
-    """decorator for super_admin and min_admin access"""
-    decorated_view_func = user_passes_test(lambda u: u.is_authenticated and
-                                           (u.is_super_admin() or u.is_mini_admin()),
-                                           login_url='login')(view_func)
-    return decorated_view_func
+def is_super_admin(user):
+    """function for super_admin access"""
+    return user.is_authenticated and user.is_super_admin()
+
+def is_admin(user):
+    """function for super_admin and min_admin access"""
+    return user.is_authenticated and (user.is_super_admin() or user.is_mini_admin())
 
 
 def get_page_range(paginator, page, max_pages=9):

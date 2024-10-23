@@ -154,30 +154,32 @@
     </div>
 
     <div class="filters-section">
-        <div class="filters-container">
-            <div class="filter-item">
-                <label>Search</label>
-                <input type="text" name="search" class="form-control" 
-                       placeholder="Search in all fields..." value="{{ search_query }}">
+        <form method="GET" id="filter-form">
+            <div class="filters-container">
+                <div class="filter-item">
+                    <label>Search</label>
+                    <input type="text" name="search" class="form-control" 
+                           placeholder="Search in all fields..." value="{{ search_query }}">
+                </div>
+                <div class="filter-item">
+                    <label>Date Range</label>
+                    <input type="text" name="date_range" class="form-control"
+                           id="date-range" placeholder="Select dates" value="{{ date_range }}">
+                </div>
+                <div class="filter-item">
+                    <label>Status</label>
+                    <select class="form-control" name="status">
+                        <option value="">All Status</option>
+                        <option value="student" {% if status_filter == 'student' %}selected{% endif %}>Students Only</option>
+                        <option value="first_time" {% if status_filter == 'first_time' %}selected{% endif %}>First Time Only</option>
+                    </select>
+                </div>
+                <div class="filter-item">
+                    <button type="submit" class="btn btn-primary w-20">Apply Filters</button>
+                    <a href="{% url 'admin_dashboard' %}" class="btn btn-secondary w-20">Clear Filters</a>
+                </div>
             </div>
-            <div class="filter-item">
-                <label>Date Range</label>
-                <input type="text" name="date_range" class="form-control"
-                       id="date-range" placeholder="Select dates" value="{{ date_range }}">
-            </div>
-            <div class="filter-item">
-                <label>Status</label>
-                <select class="form-control" name="status">
-                    <option value="">All Status</option>
-                    <option value="student" {% if status_filter == 'student' %}selected{% endif %}>Students Only</option>
-                    <option value="first_time" {% if status_filter == 'first_time' %}selected{% endif %}>First Time Only</option>
-                </select>
-            </div>
-            <div class="filter-item">
-                <button type="submit" class="btn btn-primary w-20">Apply Filters</button>
-                <a href="{% url 'admin_dashboard' %}" class="btn btn-secondary w-20">Clear Filters</a>
-            </div>
-        </div>
+        </form>
     </div>
 
     <div class="table-container">
@@ -270,11 +272,34 @@
 {% block extra_js %}
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 <script>
-    flatpickr("#date-range", {
-        mode: "range",
-        dateFormat: "d-m-Y",
-        placeholder: "Select date range",
-        defaultDate: "{{ date_range|default:'' }}".split(" to "),
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize flatpickr with proper date format
+        flatpickr("#date-range", {
+            mode: "range",
+            dateFormat: "d-m-Y",
+            placeholder: "Select date range",
+            defaultDate: "{{ date_range|default:'' }}".split(" to "),
+            onChange: function(selectedDates, dateStr) {
+            }
+        });
+
+        // Preserve filters in pagination links
+        document.querySelectorAll('.pagination .page-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const pageUrl = new URL(this.href);
+                const currentUrl = new URL(window.location.href);
+                
+                // Copy current search params
+                for (let param of currentUrl.searchParams) {
+                    if (param[0] !== 'page') {
+                        pageUrl.searchParams.set(param[0], param[1]);
+                    }
+                }
+                
+                window.location.href = pageUrl.toString();
+            });
+        });
     });
 </script>
 {% endblock %}

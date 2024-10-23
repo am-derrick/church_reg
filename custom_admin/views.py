@@ -2,6 +2,7 @@ from .utils import get_page_range
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db.models import Q
 from datetime import datetime
+from django.utils.timezone import make_aware
 from .utils import permission_required, is_super_admin, is_admin
 from .forms import CustomUserCreationForm, CustomUserChangeForm
 from django.contrib.auth import get_user_model
@@ -60,17 +61,18 @@ def admin_dashboard(request):
             start_date, end_date = date_range.split(' to ')
             start_date = datetime.strptime(start_date, '%d-%m-%Y')
             end_date = datetime.strptime(end_date, '%d-%m-%Y')
+            start_date = make_aware(start_date)
             end_date = end_date.replace(hour=23, minute=59, second=59) # Time components to ensure full day coverage
             registrations = registrations.filter(created_at__range=[start_date, end_date])
         except (ValueError, AttributeError):
-            messages.error(request, 'Invalid date range format.')
+            messages.error(request, 'Invalid date range format. Please use DD-MM-YYYY format')
 
     # Status filter
     if status_filter:
         if status_filter == 'student':
-            registrations = registrations.filter(is_student=True)
+            registrations = registrations.filter(is_student="Yes")
         elif status_filter == 'first_time':
-            registrations = registrations.filter(is_first_time=True)
+            registrations = registrations.filter(is_first_time="Yes")
 
     registrations = registrations.order_by(order_by)
     paginator = Paginator(registrations, 25)

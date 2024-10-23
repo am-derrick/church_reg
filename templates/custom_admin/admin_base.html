@@ -24,6 +24,7 @@
             font-family: "Inter", sans-serif;
             background-color: var(--light-gray);
         }
+
         /* Sidebar Styles */
         .sidebar {
             width: var(--sidebar-width);
@@ -32,7 +33,7 @@
             position: fixed;
             left: 0;
             top: 0;
-            padding: 1.5rem 0.75rem;
+            padding: 1rem 0.75rem;
             color: white;
             transition: all 0.3s ease-in-out;
             z-index: 1000;
@@ -119,7 +120,7 @@
         /* Main Content Area */
         .main-content {
             margin-left: var(--sidebar-width);
-            padding: 2rem;
+            padding: 0.2rem;
             transition: all 0.3s ease-in-out;
         }
         .main-content.expanded {
@@ -265,7 +266,7 @@
             {% include 'custom_admin/messages.html' %}
          </div>
         <!-- Page Content -->
-        <div class="container-fluid mt-4">
+        <div class="container-fluid">
             {% block content %}{% endblock %}
         </div>
     </div>

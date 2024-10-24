@@ -1,0 +1,44 @@
+{% extends 'custom_admin/admin_base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Service Attendance Analytics</h2>
+
+    {% if error_message %}
+    <div class="alert alert-danger" role="alert">
+        {{ error_message }}
+    </div>
+    {% endif %}
+    
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Service Date</th>
+                    <th>Total Attendance</th>
+                    <th>New Registrations</th>
+                    <th>Updates</th>
+                    <th>Confirmations</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if daily_attendance %}
+                    {% for record in daily_attendance %}
+                    <tr>
+                        <td>{{ record.date|date:"F d, Y" }}</td>
+                        <td>{{ record.total_attendance }}</td>
+                        <td>{{ record.new_registrations }}</td>
+                        <td>{{ record.updates }}</td>
+                        <td>{{ record.confirmations }}</td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="5" class="text-center">No attendance records found.</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

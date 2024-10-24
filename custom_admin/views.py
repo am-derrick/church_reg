@@ -1,6 +1,5 @@
 from .utils import get_page_range
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from django.db.models import Q
 from datetime import datetime
 from django.utils.timezone import make_aware
 from .utils import permission_required, is_super_admin, is_admin
@@ -12,6 +11,9 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from members.models import Registration
 from django.http import HttpResponseForbidden
+from django.db.models import Count, Q
+from django.db.models.functions import TruncDate
+from members.models import ServiceAttendance
 
 
 User = get_user_model()
@@ -177,3 +179,31 @@ def delete_registration(request, registration_id):
         messages.success(request, 'Registration entry deleted successfully.')
         return redirect('admin_dashboard')
     return HttpResponseForbidden()
+
+@login_required
+def attendance_analytics(request):
+    """View for displaying attendance analytics"""
+    try:
+        daily_attendance = ServiceAttendance.objects.annotate(
+            date=TruncDate('created_at')
+        ).values('date').annotate(
+            total_attendance=Count('id'),
+            new_registrations=Count('id', filter=Q(attendance_type='NEW')),
+            updates=Count('id', filter=Q(attendance_type='UPDATE')),
+            confirmations=Count('id', filter=Q(attendance_type='CONFIRM'))
+        ).order_by('-date')
+
+        attendance_list = list(daily_attendance)
+
+        context = {
+            'daily_attendance': attendance_list,
+        }
+
+        return render(request, 'custom_admin/analytics.html', context)
+    
+    except Exception as e:
+        context = {
+            'daily_attendance': [],
+            'error_message': f"An error occurred while fetching attendance data: {str(e)}"
+        }
+        return render(request, 'custom_admin/analytics.html', context)

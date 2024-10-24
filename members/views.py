@@ -1,9 +1,8 @@
-from django.utils import timezone
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.db.models import Q
 from .forms import RegistrationForm, NameForm
-from .models import Registration
+from .models import Registration, ServiceAttendance
 
 def registration_view(request):
     """Initial registration view: displays name form"""
@@ -41,8 +40,17 @@ def registration_confirm(request):
             last_name = request.POST.get('last_name')
 
             if action == 'confirm':
+                # Get the registration and create attendance record
+                registration = Registration.objects.get(
+                    Q(first_name__iexact=first_name) & Q(last_name__iexact=last_name)
+                )
+                ServiceAttendance.objects.create(
+                    member=registration,
+                    attendance_type='CONFIRM'
+                )
                 # User confirms their details and are redirected to welcome page
                 return redirect(reverse('welcome', kwargs={'first_name': first_name}))
+            
             elif action == 'update':
                 # Fetch the existing registraion
                 registration = Registration.objects.get(
@@ -50,6 +58,7 @@ def registration_confirm(request):
                 )
                 form = RegistrationForm(instance=registration)
                 return render(request, 'members/registration.html', {'form': form, 'is_update': True})
+            
             elif action == 'new':
                 # Start a new registration
                 form = RegistrationForm(initial={'first_name': first_name, 'last_name': last_name})
@@ -74,6 +83,11 @@ def registration_submit(request):
 
         if form.is_valid():
             registration = form.save()
+            # Create atendance record
+            ServiceAttendance.objects.create(
+                member=registration,
+                attendance_type='UPDATE' if is_update else 'NEW'
+            )
             return redirect(reverse('welcome', kwargs={'first_name': registration.first_name}))
         else:
             # If form is not valid, re-render page with errors

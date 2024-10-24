@@ -1,5 +1,4 @@
 from django.db import models
-from django.utils import timezone
 
 class Registration(models.Model):
     """Registration form input fields model"""
@@ -19,3 +18,29 @@ class Registration(models.Model):
     
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
+    
+
+class ServiceAttendance(models.Model):
+    """Track member attendance per service"""
+    member = models.ForeignKey(Registration, on_delete=models.CASCADE)
+    service_date = models.DateField(auto_now_add=True)
+    attendance_type = models.CharField(
+        max_length=10,
+        choices=[
+            ('NEW', 'New Registration'),
+            ('UPDATE', 'Details Updated'),
+            ('CONFIRM', 'Confirmed Attendance')
+        ]
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        # Prevent duplicate entries for same day
+        unique_together = ['member', 'service_date']
+        indexes = [
+            models.Index(fields=['service_date']),
+            models.Index(fields=['attendance_type']),
+        ]
+
+    def __str__(self):
+        return f"{self.member} - {self.service_date}"

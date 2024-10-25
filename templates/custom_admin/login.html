@@ -1,0 +1,35 @@
+{% extends 'custom_admin/auth_base.html' %}
+{% load static %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<div class="auth-card">
+    <div class="auth-header">
+        <img src="{% static 'images/logo-01.png' %}" alt="Logo" class="img-fluid">
+        <h2 style="color: azure;">Welcome Back</h2>
+    </div>
+    <div class="auth-body">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-danger" role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+        
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" class="form-control" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" id="password" name="password" required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Login</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

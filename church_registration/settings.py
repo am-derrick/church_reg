@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 import os
 from pathlib import Path
 
+from django.contrib.messages import constants as messages
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -25,7 +27,8 @@ SECRET_KEY = 'django-insecure-^&-q%f%&8u@)*c&!lz*e_!!hfwt5$f@xic*#n*r@d46^(+z2$p
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["192.168.100.91", "127.0.0.1", "192.168.8.10", "192.168.100.88", "0.0.0.0"]
+ALLOWED_HOSTS = ["192.168.100.91", "127.0.0.1", "192.168.8.10", "192.168.100.88", "0.0.0.0",
+                 "192.168.100.52", "192.168.1.1", "192.168.1.217", "192.168.1.152"]
 
 
 # Application definition
@@ -38,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'members',
+    'custom_admin',
     'crispy_forms',
     'crispy_bootstrap4',
 ]
@@ -128,3 +132,19 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Crispy-Forms
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+# Login settings
+LOGIN_REDIRECT_URL = '/custom_admin/'
+LOGIN_URL = '/custom_admin/login/'
+
+# Custom Admins
+AUTH_USER_MODEL = 'custom_admin.CustomUser'
+
+# proper Bootstra styling
+MESSAGE_TAGS = {
+    messages.DEBUG: 'alert-secondary',
+    messages.INFO: 'alert-info',
+    messages.SUCCESS: 'alert-success',
+    messages.WARNING: 'alert-warning',
+    messages.ERROR: 'alert-danger',
+}

@@ -1,0 +1,196 @@
+{% extends 'custom_admin/admin_base.html' %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<style>
+    /* Analytics Dashboard Cards */
+    .analytics-card {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+        transition: transform 0.2s ease;
+    }
+    .analytics-card:hover {
+        transform: translateY(-2px);
+    }
+    .analytics-number {
+        font-size: 2rem;
+        font-weight: 600;
+        color: var(--primary-black);
+        margin-bottom: 0.5rem;
+    }
+    .analytics-label {
+        color: #4a5568;
+        font-size: 0.875rem;
+    }
+
+    /* Table Styles */
+    .table-container {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+        overflow: hidden;
+        margin-top: 1.5rem;
+    }
+    .table {
+        margin-bottom: 0;
+        font-size: 0.875rem;
+    }
+    .table th {
+        background-color: #f8f9fa;
+        border-bottom: 2px solid var(--border-color);
+        font-weight: 600;
+        color: var(--primary-black);
+        padding: 1rem 0.75rem;
+        white-space: nowrap;
+    }
+    .table td {
+        vertical-align: middle;
+        color: #4a5568;
+        padding: 0.75rem;
+        border-top: 1px solid var(--border-color);
+    }
+    .table tbody tr {
+        transition: all 0.2s ease;
+    }
+    .table tbody tr:hover {
+        background-color: #f8f9fa;
+    }
+
+    /* Filters Section */
+    .filters-section {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 12px;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+    }
+    .filters-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        align-items: end;
+    }
+    .filter-item {
+        flex: 1;
+        min-width: 200px;
+    }
+    .filter-item label {
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: #4a5568;
+        margin-bottom: 0.5rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0">Service Attendance Analytics</h1>
+    </div>
+
+    <!-- Analytics Summary Cards -->
+    <div class="row">
+        <div class="col-md-3">
+            <div class="analytics-card">
+                <div class="analytics-number">{{ total_attendance_sum|default:"0" }}</div>
+                <div class="analytics-label">Total Attendance</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="analytics-card">
+                <div class="analytics-number">{{ total_new_registrations|default:"0" }}</div>
+                <div class="analytics-label">Total New Registrations</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="analytics-card">
+                <div class="analytics-number">{{ total_updates|default:"0" }}</div>
+                <div class="analytics-label">Total Updates</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="analytics-card">
+                <div class="analytics-number">{{ total_confirmations|default:"0" }}</div>
+                <div class="analytics-label">Total Confirmations</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="filters-section">
+        <form method="GET" id="filter-form">
+            <div class="filters-container">
+                <div class="filter-item">
+                    <label>Date Range</label>
+                    <input type="text" name="date_range" class="form-control"
+                           id="date-range" placeholder="Select dates" value="{{ date_range }}">
+                </div>
+                <div class="filter-item">
+                    <button type="submit" class="btn btn-primary w-20">Apply Filter</button>
+                    <a href="{% url 'attendance_analytics' %}" class="btn btn-secondary w-20">Clear</a>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- Table -->
+    {% if error_message %}
+    <div class="alert alert-danger" role="alert">
+        {{ error_message }}
+    </div>
+    {% endif %}
+
+    <div class="table-container">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Service Date</th>
+                        <th>Total Attendance</th>
+                        <th>New Registrations</th>
+                        <th>Updates</th>
+                        <th>Confirmations</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if daily_attendance %}
+                        {% for record in daily_attendance %}
+                        <tr>
+                            <td>{{ record.date|date:"F d, Y" }}</td>
+                            <td>{{ record.total_attendance }}</td>
+                            <td>{{ record.new_registrations }}</td>
+                            <td>{{ record.updates }}</td>
+                            <td>{{ record.confirmations }}</td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="5" class="text-center">No attendance records found.</td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize flatpickr
+        flatpickr("#date-range", {
+            mode: "range",
+            dateFormat: "d-m-Y",
+            placeholder: "Select date range",
+            defaultDate: "{{ date_range|default:'' }}".split(" to "),
+        });
+    });
+</script>
+{% endblock %}

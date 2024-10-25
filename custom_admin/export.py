@@ -44,6 +44,8 @@ def export_registrations_csv(request):
             registrations = registrations.filter(is_student="Yes")
         elif status_filter == 'first_time':
             registrations = registrations.filter(is_first_time="Yes")
+        elif status_filter == 'consent':
+            registrations = registrations.filter(consent="Yes")
 
     registrations = registrations.order_by(order_by)
 

@@ -170,24 +170,24 @@
                         <div class="row">
                             <div class="col-6">
                                 <div class="custom-control custom-checkbox">
-                                    <input type="checkbox" class="custom-control-input" id="selectAll">
+                                    <input type="checkbox" class="custom-control-input" id="selectAll" checked>
                                     <label class="custom-control-label" for="selectAll">Select All</label>
                                 </div>
                                 <div class="column-checkboxes mt-2">
                                     <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" class="custom-control-input" id="col_first_name" name="columns" value="first_name" checked>
+                                        <input type="checkbox" class="custom-control-input" id="col_first_name" name="columns" value="first_name">
                                         <label class="custom-control-label" for="col_first_name">First Name</label>
                                     </div>
                                     <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" class="custom-control-input" id="col_last_name" name="columns" value="last_name" checked>
+                                        <input type="checkbox" class="custom-control-input" id="col_last_name" name="columns" value="last_name">
                                         <label class="custom-control-label" for="col_last_name">Last Name</label>
                                     </div>
                                     <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" class="custom-control-input" id="col_phone_number" name="columns" value="phone_number" checked>
+                                        <input type="checkbox" class="custom-control-input" id="col_phone_number" name="columns" value="phone_number">
                                         <label class="custom-control-label" for="col_phone_number">Phone Number</label>
                                     </div>
                                     <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" class="custom-control-input" id="col_institution_name" name="columns" value="institution_name" checked>
+                                        <input type="checkbox" class="custom-control-input" id="col_institution_name" name="columns" value="institution_name">
                                         <label class="custom-control-label" for="col_institution_name">Institution Name</label>
                                     </div>
                                 </div>
@@ -231,6 +231,7 @@
                         <option value="">All Status</option>
                         <option value="student" {% if status_filter == 'student' %}selected{% endif %}>Students Only</option>
                         <option value="first_time" {% if status_filter == 'first_time' %}selected{% endif %}>First Time Only</option>
+                        <option value="consent" {% if status_filter == 'consent' %}selected{% endif %}>Consent Only</option>
                     </select>
                 </div>
                 <div class="filter-item">

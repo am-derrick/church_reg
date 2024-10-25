@@ -93,34 +93,6 @@
         <h1 class="h3 mb-0">Service Attendance Analytics</h1>
     </div>
 
-    <!-- Analytics Summary Cards -->
-    <div class="row">
-        <div class="col-md-3">
-            <div class="analytics-card">
-                <div class="analytics-number">{{ total_attendance_sum|default:"0" }}</div>
-                <div class="analytics-label">Total Attendance</div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="analytics-card">
-                <div class="analytics-number">{{ total_new_registrations|default:"0" }}</div>
-                <div class="analytics-label">Total New Registrations</div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="analytics-card">
-                <div class="analytics-number">{{ total_updates|default:"0" }}</div>
-                <div class="analytics-label">Total Updates</div>
-            </div>
-        </div>
-        <div class="col-md-3">
-            <div class="analytics-card">
-                <div class="analytics-number">{{ total_confirmations|default:"0" }}</div>
-                <div class="analytics-label">Total Confirmations</div>
-            </div>
-        </div>
-    </div>
-
     <!-- Filters -->
     <div class="filters-section">
         <form method="GET" id="filter-form">

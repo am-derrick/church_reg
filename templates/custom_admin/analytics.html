@@ -10,20 +10,16 @@
         padding: 1.5rem;
         margin-bottom: 1.5rem;
         box-shadow: 0 2px 4px rgba(0,0,0,0.04);
-        transition: transform 0.2s ease;
     }
-    .analytics-card:hover {
-        transform: translateY(-2px);
-    }
-    .analytics-number {
-        font-size: 2rem;
-        font-weight: 600;
-        color: var(--primary-black);
-        margin-bottom: 0.5rem;
-    }
-    .analytics-label {
-        color: #4a5568;
-        font-size: 0.875rem;
+
+    /* Chart Container */
+    .chart-container {
+        background: white;
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+        height: 400px;
     }
 
     /* Table Styles */
@@ -91,6 +87,9 @@
     <!-- Header -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="h3 mb-0">Service Attendance Analytics</h1>
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addAttendanceModal">
+            Add Attendance Entry
+        </button>
     </div>
 
     <!-- Filters -->
@@ -103,20 +102,29 @@
                            id="date-range" placeholder="Select dates" value="{{ date_range }}">
                 </div>
                 <div class="filter-item">
-                    <button type="submit" class="btn btn-primary w-20">Apply Filter</button>
-                    <a href="{% url 'attendance_analytics' %}" class="btn btn-secondary w-20">Clear</a>
+                    <label>View By</label>
+                    <select class="form-control" name="view_by" id="view-by">
+                        <option value="daily">Daily</option>
+                        <option value="weekly">Weekly</option>
+                        <option value="monthly">Monthly</option>
+                        <option value="quarterly">Quarterly</option>
+                        <option value="yearly">Yearly</option>
+                    </select>
+                </div>
+                <div class="filter-item">
+                    <button type="submit" class="btn btn-primary">Apply Filter</button>
+                    <a href="{% url 'attendance_analytics' %}" class="btn btn-secondary">Clear</a>
                 </div>
             </div>
         </form>
     </div>
 
-    <!-- Table -->
-    {% if error_message %}
-    <div class="alert alert-danger" role="alert">
-        {{ error_message }}
+    <!-- Chart -->
+    <div class="chart-container">
+        <canvas id="attendanceChart"></canvas>
     </div>
-    {% endif %}
 
+    <!-- Table -->
     <div class="table-container">
         <div class="table-responsive">
             <table class="table">
@@ -127,22 +135,35 @@
                         <th>New Registrations</th>
                         <th>Updates</th>
                         <th>Confirmations</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% if daily_attendance %}
                         {% for record in daily_attendance %}
-                        <tr>
+                        <tr data-record-id="{{ record.id }}">
                             <td>{{ record.date|date:"F d, Y" }}</td>
                             <td>{{ record.total_attendance }}</td>
                             <td>{{ record.new_registrations }}</td>
                             <td>{{ record.updates }}</td>
                             <td>{{ record.confirmations }}</td>
+                            <td>
+                                <button class="btn btn-sm btn-primary edit-btn" 
+                                        data-toggle="modal" 
+                                        data-target="#editAttendanceModal"
+                                        data-record-id="{{ record.id }}"
+                                        data-date="{{ record.date|date:'Y-m-d' }}"
+                                        data-new="{{ record.new_registrations }}"
+                                        data-updates="{{ record.updates }}"
+                                        data-confirmations="{{ record.confirmations }}">
+                                    Edit
+                                </button>
+                            </td>
                         </tr>
                         {% endfor %}
                     {% else %}
                         <tr>
-                            <td colspan="5" class="text-center">No attendance records found.</td>
+                            <td colspan="6" class="text-center">No attendance records found.</td>
                         </tr>
                     {% endif %}
                 </tbody>
@@ -150,19 +171,156 @@
         </div>
     </div>
 </div>
+
+<!-- Add Attendance Modal -->
+<div class="modal fade" id="addAttendanceModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add Attendance Entry</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="POST" action="{% url 'add_attendance' %}">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Date</label>
+                        <input type="date" class="form-control" name="date" required>
+                    </div>
+                    <div class="form-group">
+                        <label>New Registrations</label>
+                        <input type="number" class="form-control" name="new_registrations" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Updates</label>
+                        <input type="number" class="form-control" name="updates" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Confirmations</label>
+                        <input type="number" class="form-control" name="confirmations" min="0" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save Entry</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- Edit Attendance Modal -->
+<div class="modal fade" id="editAttendanceModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Attendance Entry</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="POST" action="{% url 'edit_attendance' 0 %}" id="editAttendanceForm">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Date</label>
+                        <input type="date" class="form-control" name="date" required>
+                    </div>
+                    <div class="form-group">
+                        <label>New Registrations</label>
+                        <input type="number" class="form-control" name="new_registrations" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Updates</label>
+                        <input type="number" class="form-control" name="updates" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Confirmations</label>
+                        <input type="number" class="form-control" name="confirmations" min="0" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 {% endblock %}
 
 {% block extra_js %}
 <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Initialize flatpickr
-        flatpickr("#date-range", {
-            mode: "range",
-            dateFormat: "d-m-Y",
-            placeholder: "Select date range",
-            defaultDate: "{{ date_range|default:'' }}".split(" to "),
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize flatpickr
+    flatpickr("#date-range", {
+        mode: "range",
+        dateFormat: "d-m-Y",
+        placeholder: "Select date range",
+        defaultDate: "{{ date_range|default:'' }}".split(" to "),
+    });
+
+    // Initialize Chart
+    const ctx = document.getElementById('attendanceChart').getContext('2d');
+    const attendanceData = {
+        labels: {% if daily_attendance %}
+                [{% for record in daily_attendance %}'{{ record.date|date:"M d, Y" }}'{% if not forloop.last %},{% endif %}{% endfor %}],
+                {% else %}
+                [],
+                {% endif %}
+        datasets: [{
+            label: 'Total Attendance',
+            data: {% if daily_attendance %}
+                  [{% for record in daily_attendance %}{{ record.total_attendance }}{% if not forloop.last %},{% endif %}{% endfor %}],
+                  {% else %}
+                  [],
+                  {% endif %}
+            borderColor: 'rgb(75, 192, 192)',
+            tension: 0.1
+        }, {
+            label: 'New Registrations',
+            data: {% if daily_attendance %}
+                  [{% for record in daily_attendance %}{{ record.new_registrations }}{% if not forloop.last %},{% endif %}{% endfor %}],
+                  {% else %}
+                  [],
+                  {% endif %}
+            borderColor: 'rgb(255, 99, 132)',
+            tension: 0.1
+        }]
+    };
+
+    new Chart(ctx, {
+        type: 'line',
+        data: attendanceData,
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    // Edit Modal Handler
+    const editButtons = document.querySelectorAll('.edit-btn');
+    editButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const recordId = this.dataset.recordId;
+            const form = document.getElementById('editAttendanceForm');
+            form.action = form.action.replace(/\/0$/, `/${recordId}`);
+            
+            // Populate form fields
+            form.querySelector('input[name="date"]').value = this.dataset.date;
+            form.querySelector('input[name="new_registrations"]').value = this.dataset.new;
+            form.querySelector('input[name="updates"]').value = this.dataset.updates;
+            form.querySelector('input[name="confirmations"]').value = this.dataset.confirmations;
         });
     });
+});
 </script>
 {% endblock %}

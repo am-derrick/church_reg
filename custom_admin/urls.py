@@ -15,4 +15,5 @@ urlpatterns = [
     path('registration/<int:registration_id>/delete', views.delete_registration,
          name='delete_registration'),
     path('analytics/', views.attendance_analytics, name='attendance_analytics'),
+    path('audit-logs/', views.audit_log_view, name='audit_logs'),
 ]

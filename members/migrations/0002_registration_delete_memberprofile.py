@@ -6,25 +6,33 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('members', '0001_initial'),
+        ("members", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Registration',
+            name="Registration",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('first_name', models.CharField(max_length=100)),
-                ('last_name', models.CharField(max_length=100)),
-                ('gender', models.CharField(max_length=10)),
-                ('phone_number', models.CharField(max_length=15)),
-                ('residence', models.CharField(max_length=255)),
-                ('is_student', models.BooleanField(default=False)),
-                ('is_first_time', models.BooleanField(default=False)),
-                ('consent', models.BooleanField(default=False)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("first_name", models.CharField(max_length=100)),
+                ("last_name", models.CharField(max_length=100)),
+                ("gender", models.CharField(max_length=10)),
+                ("phone_number", models.CharField(max_length=15)),
+                ("residence", models.CharField(max_length=255)),
+                ("is_student", models.BooleanField(default=False)),
+                ("is_first_time", models.BooleanField(default=False)),
+                ("consent", models.BooleanField(default=False)),
             ],
         ),
         migrations.DeleteModel(
-            name='MemberProfile',
+            name="MemberProfile",
         ),
     ]

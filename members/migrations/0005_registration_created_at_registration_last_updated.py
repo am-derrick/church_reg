@@ -7,19 +7,21 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('members', '0004_alter_registration_phone_number'),
+        ("members", "0004_alter_registration_phone_number"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='registration',
-            name='created_at',
-            field=models.DateTimeField(auto_now_add=True, default=django.utils.timezone.now),
+            model_name="registration",
+            name="created_at",
+            field=models.DateTimeField(
+                auto_now_add=True, default=django.utils.timezone.now
+            ),
             preserve_default=False,
         ),
         migrations.AddField(
-            model_name='registration',
-            name='last_updated',
+            model_name="registration",
+            name="last_updated",
             field=models.DateTimeField(auto_now=True),
         ),
     ]

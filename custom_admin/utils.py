@@ -1,3 +1,7 @@
+"""
+module contains helper functions for admin permissions, pagination
+and getting the IP
+"""
 from django.contrib import messages
 from django.shortcuts import redirect
 
@@ -31,7 +35,6 @@ def get_page_range(paginator, page, max_pages=9):
     # If total pages is less than max_pages, show all pages
     if total_pages <= max_pages:
         return range(1, total_pages + 1)
-    
     # Calculates the ranges of pages to show
     start_page = max(current_page - 4, 1)
     end_page = min(current_page + 4, total_pages)

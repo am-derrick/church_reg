@@ -18,11 +18,9 @@ class CustomUser(AbstractUser):
 
     def is_super_admin(self):
         return self.role == self.SUPER_ADMIN
-    
     def is_mini_admin(self):
         return self.role == self.MINI_ADMIN
     
-
 User = get_user_model()
 
 class AuditLog(models.Model):
@@ -52,6 +50,7 @@ class AuditLog(models.Model):
     changes = models.JSONField(null=True, blank=True)
 
     class Meta:
+        """Meta details"""
         ordering = ['-timestamp']
         indexes = [
             models.Index(fields=['timestamp']),

@@ -1,19 +1,25 @@
+"""
+module for signals to log changes and deletion
+"""
+
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from django.contrib.contenttypes.models import ContentType
-from members.models import Registration
 from django.forms.models import model_to_dict
+
+from members.models import Registration
 from .models import AuditLog
+
+from threading import local
 
 def log_change(instance, action, user=None, changes=None):
     """Helper function to create audit log entries"""
 
-    # Get request data from thres local storage if available
+    # Get request data from thread local storage if available
     try:
-        from threading import local
         _thread_locals = local()
         request = getattr(_thread_locals, 'request', None)
-    except:
+    except AttributeError:
         request = None
 
     audit_data = {}
@@ -31,7 +37,7 @@ def log_change(instance, action, user=None, changes=None):
     )
 
 @receiver(post_save, sender=Registration)
-def log_registration_change(sender, instance, created, **kwargs):
+def log_registration_change(instance, created):
     """Log changes to the Registration model"""
     action = 'CREATE' if created else 'UPDATE'
 
@@ -56,6 +62,6 @@ def log_registration_change(sender, instance, created, **kwargs):
     log_change(instance, action, changes=changes)
 
 @receiver(post_delete, sender=Registration)
-def log_registration_deletion(sender, instance, **kwargs):
+def log_registration_deletion(instance):
     """Log deletion of Registration records"""
     log_change(instance, 'DELETE')

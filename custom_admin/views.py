@@ -1,12 +1,16 @@
-from .utils import get_page_range
-from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+"""
+module containing views for the custom_admin app
+"""
+
 from datetime import datetime
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.utils.timezone import make_aware
-from .utils import permission_required, is_super_admin, is_admin, get_client_ip
-from .forms import CustomUserCreationForm, CustomUserChangeForm
 from django.contrib.auth import get_user_model
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
+from .utils import get_page_range
+from .utils import permission_required, is_super_admin, is_admin, get_client_ip
+from .forms import CustomUserCreationForm, CustomUserChangeForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from members.models import Registration
@@ -35,8 +39,7 @@ def login_view(request):
                 user_agent=request.META.get('HTTP_USER_AGENT', '')
             )
             return redirect('admin_dashboard')
-        else:
-            messages.error(request, 'Invalid username or password')
+        messages.error(request, 'Invalid username or password')
     return render(request, 'custom_admin/login.html')
 
 @login_required
@@ -73,7 +76,7 @@ def admin_dashboard(request):
             start_date = datetime.strptime(start_date, '%d-%m-%Y')
             end_date = datetime.strptime(end_date, '%d-%m-%Y')
             start_date = make_aware(start_date)
-            end_date = end_date.replace(hour=23, minute=59, second=59) # Time components to ensure full day coverage
+            end_date = end_date.replace(hour=23, minute=59, second=59)
             registrations = registrations.filter(created_at__range=[start_date, end_date])
         except (ValueError, AttributeError):
             messages.error(request, 'Invalid date range format. Please use DD-MM-YYYY format')
@@ -210,7 +213,6 @@ def attendance_analytics(request):
         }
 
         return render(request, 'custom_admin/analytics.html', context)
-    
     except Exception as e:
         context = {
             'daily_attendance': [],

@@ -7,7 +7,6 @@ from .utils import get_client_ip
 
 class AuditLogMiddleware(MiddlewareMixin):
     """class for audit logging"""
-    
     def process_request(self, request):
         """processes request and gets data from the headers"""
         request.audit_data = {

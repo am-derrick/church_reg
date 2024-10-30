@@ -2,7 +2,7 @@ from .utils import get_page_range
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from datetime import datetime
 from django.utils.timezone import make_aware
-from .utils import permission_required, is_super_admin, is_admin
+from .utils import permission_required, is_super_admin, is_admin, get_client_ip
 from .forms import CustomUserCreationForm, CustomUserChangeForm
 from django.contrib.auth import get_user_model
 from django.shortcuts import render, redirect, get_object_or_404
@@ -14,6 +14,7 @@ from django.http import HttpResponseForbidden
 from django.db.models import Count, Q
 from django.db.models.functions import TruncDate
 from members.models import ServiceAttendance
+from .models import AuditLog
 
 
 User = get_user_model()
@@ -26,6 +27,13 @@ def login_view(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
+            # Log successful login
+            AuditLog.objects.create(
+                user=user,
+                action='LOGIN',
+                ip_address=get_client_ip(request),
+                user_agent=request.META.get('HTTP_USER_AGENT', '')
+            )
             return redirect('admin_dashboard')
         else:
             messages.error(request, 'Invalid username or password')
@@ -209,3 +217,42 @@ def attendance_analytics(request):
             'error_message': f"An error occurred while fetching attendance data: {str(e)}"
         }
         return render(request, 'custom_admin/analytics.html', context)
+    
+@login_required
+@permission_required(is_super_admin)
+def audit_log_view(request):
+    """View for displaying audit logs with filters"""
+    logs = AuditLog.objects.select_related('user', 'content_type').all()
+
+    # Filters
+    user_filter = request.GET.get('user')
+    action_filter = request.GET.get('action')
+    date_range = request.GET.get('date_range')
+
+    if user_filter:
+        logs = logs.filter(user_id=user_filter)
+    if action_filter:
+        logs = logs.filter(action=action_filter)
+    if date_range:
+        try:
+            start_date, end_date = date_range.split(' to ')
+            start_date = datetime.strptime(start_date, '%d-%m-%Y')
+            end_date = datetime.strptime(end_date, '%d-%m-%Y')
+            start_date = make_aware(start_date)
+            end_date = end_date.replace(hour=23, minute=59, second=59)
+            logs = logs.filter(timestamp__range=[start_date, end_date])
+        except (ValueError, AttributeError):
+            messages.error(request, 'Invalid date range format')
+
+    # Pagination
+    paginator = Paginator(logs, 50)
+    page = request.GET.get('page')
+    logs = paginator.get_page(page)
+
+    context = {
+        'logs': logs,
+        'users': User.objects.all(),
+        'actions': AuditLog.ACTION_TYPES,
+    }
+
+    return render(request, 'custom_admin/audit_logs.html', context)

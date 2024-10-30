@@ -37,17 +37,11 @@ ipython_config.py
 # pyenv
 .python-version
 
-# SageMath parsed files
-*.sage.py
-
 # dotenv
 .env
 .venv
 env/
 venv/
-
-# Rope project settings
-.ropeproject
 
 # mkdocs documentation
 /site

@@ -1,0 +1,277 @@
+{% extends "custom_admin/admin_base.html" %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<style>
+    /* Filters Section */
+    .filters-section {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 12px;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+    }
+    .filters-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        align-items: end;
+    }
+    .filter-item {
+        flex: 1;
+        min-width: 200px;
+    }
+    .filter-item label {
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: #4a5568;
+        margin-bottom: 0.5rem;
+        display: block;
+    }
+    .filter-item select, 
+    .filter-item input {
+        width: 100%;
+        padding: 0.5rem;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        outline: none;
+        font-size: 0.875rem;
+        background-color: white;
+    }
+
+    /* Table Styles */
+    .table-container {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+        overflow: hidden;
+    }
+    .table {
+        margin-bottom: 0;
+        font-size: 0.875rem;
+    }
+    .table th {
+        background-color: #f8f9fa;
+        border-bottom: 2px solid var(--border-color);
+        font-weight: 600;
+        color: var(--primary-black);
+        padding: 1rem 0.75rem;
+        white-space: nowrap;
+    }
+    .table td {
+        vertical-align: middle;
+        color: #4a5568;
+        padding: 0.75rem;
+        border-bottom: 1px solid var(--border-color);
+    }
+    .table tbody tr {
+        transition: all 0.2s ease;
+    }
+    .table tbody tr:hover {
+        background-color: #f8f9fa;
+    }
+
+    /* Changes Details */
+    details {
+        margin: 0.5rem 0;
+    }
+    details summary {
+        color: var(--primary-orange);
+        font-weight: 500;
+        cursor: pointer;
+        outline: none;
+    }
+    details pre {
+        margin-top: 0.5rem;
+        padding: 0.75rem;
+        background: #f8f9fa;
+        border-radius: 6px;
+        font-size: 0.75rem;
+        white-space: pre-wrap;
+    }
+
+    /* Pagination */
+    .pagination-container {
+        padding: 1rem;
+        background: white;
+        border-top: 1px solid var(--border-color);
+    }
+    .pagination {
+        display: flex;
+        justify-content: center;
+        gap: 0.25rem;
+    }
+    .pagination a {
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        color: #4a5568;
+        font-size: 0.875rem;
+        text-decoration: none;
+        transition: all 0.2s ease;
+    }
+    .pagination a:hover {
+        background-color: #f8f9fa;
+    }
+    .pagination .active {
+        background-color: var(--primary-orange);
+        color: white;
+    }
+
+    /* Table Responsive */
+    .table-responsive {
+        max-height: calc(100vh - 300px);
+        overflow-y: auto;
+    }
+
+    /* IP Address Badge */
+    .ip-badge {
+        background: #e2e8f0;
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        font-family: monospace;
+        font-size: 0.8125rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3 mb-0">Audit Logs</h1>
+    </div>
+
+    <!-- Filters -->
+    <div class="filters-section">
+        <form method="get" class="mb-0">
+            <div class="filters-container">
+                <div class="filter-item">
+                    <label>User</label>
+                    <select name="user" class="form-control">
+                        <option value="">All Users</option>
+                        {% for user in users %}
+                            <option value="{{ user.id }}" {% if request.GET.user == user.id|stringformat:"s" %}selected{% endif %}>
+                                {{ user.username }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="filter-item">
+                    <label>Action</label>
+                    <select name="action" class="form-control">
+                        <option value="">All Actions</option>
+                        {% for action_code, action_name in actions %}
+                            <option value="{{ action_code }}" {% if request.GET.action == action_code %}selected{% endif %}>
+                                {{ action_name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="filter-item">
+                    <label>Date Range</label>
+                    <input type="text" name="date_range" class="form-control" id="date-range"
+                           placeholder="DD-MM-YYYY to DD-MM-YYYY" value="{{ request.GET.date_range }}">
+                </div>
+                
+                <div class="filter-item">
+                    <button type="submit" class="btn btn-primary w-100">
+                        Apply Filters
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- Logs Table -->
+    <div class="table-container">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Timestamp</th>
+                        <th>User</th>
+                        <th>Action</th>
+                        <th>Details</th>
+                        <th>IP Address</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for log in logs %}
+                    <tr>
+                        <td>{{ log.timestamp|date:"d-m-Y H:i:s" }}</td>
+                        <td>
+                            <span class="font-medium">{{ log.user.username|default:"System" }}</span>
+                        </td>
+                        <td>{{ log.get_action_display }}</td>
+                        <td>
+                            {% if log.changes %}
+                                <details>
+                                    <summary>View Changes</summary>
+                                    <pre>{{ log.changes|pprint }}</pre>
+                                </details>
+                            {% else %}
+                                <span class="text-gray-600">
+                                    {{ log.content_type.model|title }} {{ log.action|lower }}d
+                                </span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if log.ip_address %}
+                                <span class="ip-badge">{{ log.ip_address }}</span>
+                            {% else %}
+                                <span class="text-gray-400">N/A</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {% if logs.has_other_pages %}
+        <div class="pagination-container">
+            <nav class="pagination">
+                {% if logs.has_previous %}
+                    <a href="?page={{ logs.previous_page_number }}{% if request.GET.user %}&user={{ request.GET.user }}{% endif %}{% if request.GET.action %}&action={{ request.GET.action }}{% endif %}{% if request.GET.date_range %}&date_range={{ request.GET.date_range }}{% endif %}"
+                       class="btn btn-sm btn-light">
+                        Previous
+                    </a>
+                {% endif %}
+                
+                {% for i in logs.paginator.page_range %}
+                    {% if logs.number == i %}
+                        <a href="#" class="active">{{ i }}</a>
+                    {% else %}
+                        <a href="?page={{ i }}{% if request.GET.user %}&user={{ request.GET.user }}{% endif %}{% if request.GET.action %}&action={{ request.GET.action }}{% endif %}{% if request.GET.date_range %}&date_range={{ request.GET.date_range }}{% endif %}">
+                            {{ i }}
+                        </a>
+                    {% endif %}
+                {% endfor %}
+                
+                {% if logs.has_next %}
+                    <a href="?page={{ logs.next_page_number }}{% if request.GET.user %}&user={{ request.GET.user }}{% endif %}{% if request.GET.action %}&action={{ request.GET.action }}{% endif %}{% if request.GET.date_range %}&date_range={{ request.GET.date_range }}{% endif %}"
+                       class="btn btn-sm btn-light">
+                        Next
+                    </a>
+                {% endif %}
+            </nav>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize flatpickr for date range picker
+        flatpickr("#date-range", {
+            mode: "range",
+            dateFormat: "d-m-Y",
+            placeholder: "Select date range"
+        });
+    });
+</script>
+{% endblock %}

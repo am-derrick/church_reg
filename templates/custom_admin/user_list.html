@@ -3,8 +3,78 @@
 
 {% block title %}User List{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<style>
+    /* Table Styles */
+    .table-container {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+        overflow: hidden;
+    }
+    .table {
+        margin-bottom: 0;
+        font-size: 0.875rem;
+    }
+    .table th {
+        background-color: #f8f9fa;
+        border-bottom: 2px solid var(--border-color);
+        font-weight: 600;
+        color: var(--primary-black);
+        padding: 1rem 0.75rem;
+        white-space: nowrap;
+    }
+    .table td {
+        vertical-align: middle;
+        color: #4a5568;
+        padding: 0.75rem;
+        max-width: 200px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .table tbody tr {
+        transition: all 0.2s ease;
+        height: 48px;
+    }
+    .table tbody tr:hover {
+        background-color: #f8f9fa;
+    }
+
+    /* Table Scroll */
+    .table-responsive {
+        max-height: calc(100vh - 300px);
+        overflow-y: auto;
+    }
+
+    /* Tooltips for truncated content */
+    .cell-content {
+        position: relative;
+        cursor: default;
+    }
+
+    .cell-content:hover::after {
+        content: attr(data-full-text);
+        position: absolute;
+        bottom: 100%;
+        left: 0;
+        background: #333;
+        color: white;
+        padding: 0.5rem;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        white-space: normal;
+        max-width: 300px;
+        z-index: 1000;
+    }
+</style>
+{% endblock %}
+
 {% block content %}
-<h2 class="mb-4">User List</h2>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="h3 mb-0">User List</h1>
+</div>
 <a href="{% url 'user_create' %}" class="btn btn-primary mb-3">Add New User</a>
 <div class="card">
     <div class="card-body">
@@ -16,7 +86,7 @@
                         <th>Email</th>
                         <th>Role</th>
                         <th>Active</th>
-                        <th>Date Joined</th>
+                        <th>Date Created</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -31,7 +101,8 @@
                         <td>
                             <a href="{% url 'user_edit' user.id %}" class="btn btn-sm btn-primary">Edit</a>
                             {% if user.is_active %}
-                                <a href="{% url 'user_deactivate' user.id %}" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to deactivate this user?')">Deactivate</a>
+                                <a href="{% url 'user_deactivate' user.id %}" class="btn btn-sm btn-danger"
+                                onclick="return confirm('Are you sure you want to deactivate this user?')">Deactivate</a>
                             {% endif %}
                         </td>
                     </tr>

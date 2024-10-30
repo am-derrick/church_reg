@@ -6,43 +6,51 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('members', '0002_registration_delete_memberprofile'),
+        ("members", "0002_registration_delete_memberprofile"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='registration',
-            name='institution_location',
+            model_name="registration",
+            name="institution_location",
             field=models.CharField(blank=True, max_length=255, null=True),
         ),
         migrations.AddField(
-            model_name='registration',
-            name='institution_name',
+            model_name="registration",
+            name="institution_name",
             field=models.CharField(blank=True, max_length=255, null=True),
         ),
         migrations.AddField(
-            model_name='registration',
-            name='occupation',
+            model_name="registration",
+            name="occupation",
             field=models.CharField(blank=True, max_length=255, null=True),
         ),
         migrations.AlterField(
-            model_name='registration',
-            name='consent',
-            field=models.CharField(choices=[('Yes', 'Yes'), ('No', 'No')], max_length=3),
+            model_name="registration",
+            name="consent",
+            field=models.CharField(
+                choices=[("Yes", "Yes"), ("No", "No")], max_length=3
+            ),
         ),
         migrations.AlterField(
-            model_name='registration',
-            name='gender',
-            field=models.CharField(choices=[('Male', 'Male'), ('Female', 'Female')], max_length=6),
+            model_name="registration",
+            name="gender",
+            field=models.CharField(
+                choices=[("Male", "Male"), ("Female", "Female")], max_length=6
+            ),
         ),
         migrations.AlterField(
-            model_name='registration',
-            name='is_first_time',
-            field=models.CharField(choices=[('Yes', 'Yes'), ('No', 'No')], max_length=3),
+            model_name="registration",
+            name="is_first_time",
+            field=models.CharField(
+                choices=[("Yes", "Yes"), ("No", "No")], max_length=3
+            ),
         ),
         migrations.AlterField(
-            model_name='registration',
-            name='is_student',
-            field=models.CharField(choices=[('Yes', 'Yes'), ('No', 'No')], max_length=3),
+            model_name="registration",
+            name="is_student",
+            field=models.CharField(
+                choices=[("Yes", "Yes"), ("No", "No")], max_length=3
+            ),
         ),
     ]

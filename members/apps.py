@@ -9,5 +9,6 @@ class MembersConfig(AppConfig):
     """
     Members app configuration
     """
-    default_auto_field = 'django.db.models.BigAutoField'
-    name = 'members'
+
+    default_auto_field = "django.db.models.BigAutoField"
+    name = "members"

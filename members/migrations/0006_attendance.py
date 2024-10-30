@@ -7,20 +7,45 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('members', '0005_registration_created_at_registration_last_updated'),
+        ("members", "0005_registration_created_at_registration_last_updated"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Attendance',
+            name="Attendance",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('service_type', models.CharField(choices=[('TH', 'Thursday Service'), ('SU', 'Sunday Service'), ('PV', 'Pastoral Visit')], max_length=2)),
-                ('date', models.DateTimeField(auto_now_add=True)),
-                ('member', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='attendaces', to='members.registration')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "service_type",
+                    models.CharField(
+                        choices=[
+                            ("TH", "Thursday Service"),
+                            ("SU", "Sunday Service"),
+                            ("PV", "Pastoral Visit"),
+                        ],
+                        max_length=2,
+                    ),
+                ),
+                ("date", models.DateTimeField(auto_now_add=True)),
+                (
+                    "member",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="attendaces",
+                        to="members.registration",
+                    ),
+                ),
             ],
             options={
-                'unique_together': {('member', 'service_type', 'date')},
+                "unique_together": {("member", "service_type", "date")},
             },
         ),
     ]

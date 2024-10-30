@@ -10,35 +10,40 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 
 User = get_user_model()
 
+
 class CustomUser(AbstractUser):
     """Role based admins (users)"""
-    SUPER_ADMIN = 'SA'
-    MINI_ADMIN = 'MA'
-    REGULAR_USER = 'RU'
+
+    SUPER_ADMIN = "SA"
+    MINI_ADMIN = "MA"
+    REGULAR_USER = "RU"
     ROLE_CHOICES = [
-        (SUPER_ADMIN, 'Super Admin'),
-        (MINI_ADMIN, 'Mini Admin'),
-        (REGULAR_USER, 'Regular User'),
+        (SUPER_ADMIN, "Super Admin"),
+        (MINI_ADMIN, "Mini Admin"),
+        (REGULAR_USER, "Regular User"),
     ]
     role = models.CharField(max_length=2, choices=ROLE_CHOICES, default=REGULAR_USER)
 
     def is_super_admin(self):
         """super admin user"""
         return self.role == self.SUPER_ADMIN
+
     def is_mini_admin(self):
         """mini admin user"""
         return self.role == self.MINI_ADMIN
 
+
 class AuditLog(models.Model):
     """class for auditing and tracking logs"""
+
     ACTION_TYPES = (
-        ('CREATE', 'Create'),
-        ('UPDATE', 'Update'),
-        ('DELETE', 'Delete'),
-        ('LOGIN', 'Login'),
-        ('LOGOUT', 'Logout'),
-        ('EXPORT', 'Export'),
-        ('VIEW', 'View'),
+        ("CREATE", "Create"),
+        ("UPDATE", "Update"),
+        ("DELETE", "Delete"),
+        ("LOGIN", "Login"),
+        ("LOGOUT", "Logout"),
+        ("EXPORT", "Export"),
+        ("VIEW", "View"),
     )
 
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
@@ -50,18 +55,19 @@ class AuditLog(models.Model):
     # For tracking the specific modified object
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE, null=True)
     object_id = models.CharField(max_length=255, null=True)
-    content_object = GenericForeignKey('content_type', 'object_id')
+    content_object = GenericForeignKey("content_type", "object_id")
 
     # Store the changes
     changes = models.JSONField(null=True, blank=True)
 
     class Meta:
         """Meta details"""
-        ordering = ['-timestamp']
+
+        ordering = ["-timestamp"]
         indexes = [
-            models.Index(fields=['timestamp']),
-            models.Index(fields=['action']),
-            models.Index(fields=['user']),
+            models.Index(fields=["timestamp"]),
+            models.Index(fields=["action"]),
+            models.Index(fields=["user"]),
         ]
 
     def __str__(self):

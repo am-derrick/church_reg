@@ -2,23 +2,30 @@
 module contains helper functions for admin permissions, pagination
 and getting the IP
 """
+
 from django.contrib import messages
 from django.shortcuts import redirect
 
+
 def permission_required(permission_func):
     """decorator to check for permission of user or else display that they don't have access"""
+
     def decorator(view_func):
         def wrapped_view(request, *args, **kwargs):
             if permission_func(request.user):
                 return view_func(request, *args, **kwargs)
             messages.error(request, "You don't have permission to perform this action.")
-            return redirect('admin_dashboard')
+            return redirect("admin_dashboard")
+
         return wrapped_view
+
     return decorator
+
 
 def is_super_admin(user):
     """function for super_admin access"""
     return user.is_authenticated and user.is_super_admin()
+
 
 def is_admin(user):
     """function for super_admin and min_admin access"""
@@ -51,24 +58,25 @@ def get_page_range(paginator, page, max_pages=9):
     if start_page > 1:
         page_range.append(1)
         if start_page > 2:
-            page_range.append('...')
+            page_range.append("...")
 
     # Add main range of pages
-    page_range.extend(range(start_page, end_page +1))
+    page_range.extend(range(start_page, end_page + 1))
 
     # Add last page and elipsis
     if end_page < total_pages:
         if end_page < total_pages - 1:
-            page_range.append('...')
+            page_range.append("...")
         page_range.append(total_pages)
 
     return page_range
 
+
 def get_client_ip(request):
     """Get client IP from request"""
-    x_forwarded_for = request.META.get('HTTP_X_FORWADED_FOR')
+    x_forwarded_for = request.META.get("HTTP_X_FORWADED_FOR")
     if x_forwarded_for:
-        ip = x_forwarded_for.split(',')[0]
+        ip = x_forwarded_for.split(",")[0]
     else:
-        ip = request.META.get('REMOTE_ADDR')
+        ip = request.META.get("REMOTE_ADDR")
     return ip

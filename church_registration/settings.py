@@ -1,8 +1,14 @@
+"""
+Settings for the church_registration project
+These have been modified to cater for both production and dev mode
+"""
+
+import sys
 import os
 from pathlib import Path
+
 from django.core.management.utils import get_random_secret_key
 from django.contrib.messages import constants as messages
-import sys
 import dj_database_url
 
 from dotenv import load_dotenv
@@ -19,7 +25,7 @@ DEBUG = os.getenv("DEBUG", "False") == "True"
 
 ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "127.0.0.1,localhost").split(",")
 
-# Connect to a local SQLite database for testing
+# Connect to a local SQLite database for testing or Postgres on Production
 DEVELOPMENT_MODE = os.getenv("DEVELOPMENT_MODE", "False") == "True"
 
 # Application definition
@@ -80,7 +86,7 @@ if DEVELOPMENT_MODE is True:
     }
 elif len(sys.argv) > 0 and sys.argv[1] != 'collectstatic':
     if os.getenv("DATABASE_URL", None) is None:
-        raise Exception("DATABASE_URL environment variable not defined")
+        raise RuntimeError("DATABASE_URL environment variable not defined")
     DATABASES = {
         "default": dj_database_url.parse(os.environ.get("DATABASE_URL")),
     }

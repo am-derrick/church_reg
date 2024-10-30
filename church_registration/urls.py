@@ -1,3 +1,8 @@
+"""
+url patterns for the ``admin``, ``members`` and ``custom_admin``
+apps of the ``church_registration`` project
+"""
+
 from django.contrib import admin
 from django.urls import path, include
 

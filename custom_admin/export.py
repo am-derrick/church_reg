@@ -1,8 +1,11 @@
+"""
+module contains functions for exporting data to csv files
+"""
+
 import csv
+from datetime import datetime
 from django.db.models import Q
 from django.http import HttpResponse
-from django.utils.text import slugify
-from datetime import datetime
 from django.utils.timezone import make_aware
 from members.models import Registration
 from .utils import permission_required, is_admin

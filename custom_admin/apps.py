@@ -1,3 +1,7 @@
+"""
+app configuration for the custom_admin app
+"""
+
 from django.apps import AppConfig
 
 

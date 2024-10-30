@@ -24,7 +24,7 @@ def log_change(instance, action, user=None, changes=None):
         user=user,
         action=action,
         content_type=ContentType.objects.get_for_model(instance),
-        object_id =str(instance.pk)
+        object_id=str(instance.pk),
         changes=changes,
         ip_address=audit_data.get('ip_address'),
         user_agent=audit_data.get('user_agent')

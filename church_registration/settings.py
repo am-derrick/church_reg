@@ -1,5 +1,5 @@
 """
-Settings for the church_registration project
+Settings for the ``church_registration`` project
 These have been modified to cater for both production and dev mode
 """
 
@@ -38,8 +38,8 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "members",
     "custom_admin",
+    "members",
     "crispy_forms",
     "crispy_bootstrap4",
 ]

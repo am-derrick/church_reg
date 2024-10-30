@@ -8,8 +8,6 @@ from django.db import models
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
 
-User = get_user_model()
-
 
 class CustomUser(AbstractUser):
     """Role based admins (users)"""
@@ -31,6 +29,9 @@ class CustomUser(AbstractUser):
     def is_mini_admin(self):
         """mini admin user"""
         return self.role == self.MINI_ADMIN
+
+
+User = get_user_model()
 
 
 class AuditLog(models.Model):

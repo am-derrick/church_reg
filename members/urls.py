@@ -1,3 +1,7 @@
+"""
+contains url patterns for the members app
+"""
+
 from django.urls import path
 from . import views
 

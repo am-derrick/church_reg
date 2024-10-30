@@ -1,3 +1,8 @@
+"""
+module for converting the mock data into similar format as is accepted
+in the db before loading the data
+"""
+
 import json
 from datetime import datetime
 
@@ -18,17 +23,17 @@ def clean_value(value):
     return value
 
 # Load the original JSON data
-with open('MOCK_DATA.json', 'r') as file:
+with open('MOCK_DATA.json', 'r', encoding='utf-8') as file:
     data = json.load(file)
 
 # Process and convert the data
 converted_data = []
-pk_counter = 22  # Starting primary key
+PK_COUNTER = 22  # Starting primary key
 
 for entry in data:
     converted_entry = {
         "model": "members.Registration",  # Include the app name
-        "pk": pk_counter,
+        "pk": PK_COUNTER,
         "fields": {
             "first_name": entry["first_name"],
             "last_name": entry["last_name"],
@@ -45,17 +50,14 @@ for entry in data:
             "last_updated": format_date(entry["last_updated"])
         }
     }
-    
     # Remove any None values for fields that shouldn't be null
     fields_to_check = ["first_name", "last_name", "gender", "phone_number", 
                       "residence", "is_student", "is_first_time", "consent"]
-    
     if all(converted_entry["fields"].get(field) is not None for field in fields_to_check):
         converted_data.append(converted_entry)
-        pk_counter += 1
-
+        PK_COUNTER += 1
 # Save the converted data
-with open('converted_MOCK_DATA.json', 'w') as outfile:
+with open('converted_MOCK_DATA.json', 'w', encoding='utf-8') as outfile:
     json.dump(converted_data, outfile, indent=2)
 
 print("Conversion completed and saved to converted_MOCK_DATA.json")

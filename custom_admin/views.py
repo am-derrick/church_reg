@@ -8,18 +8,17 @@ from django.utils.timezone import make_aware
 from django.contrib.auth import get_user_model
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
-from .utils import get_page_range
-from .utils import permission_required, is_super_admin, is_admin, get_client_ip
-from .forms import CustomUserCreationForm, CustomUserChangeForm
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from members.models import Registration
 from django.http import HttpResponseForbidden
 from django.db.models import Count, Q
 from django.db.models.functions import TruncDate
+from members.models import Registration
 from members.models import ServiceAttendance
+from .utils import get_page_range
+from .utils import permission_required, is_super_admin, is_admin, get_client_ip
+from .forms import CustomUserCreationForm, CustomUserChangeForm
 from .models import AuditLog
-
 
 User = get_user_model()
 

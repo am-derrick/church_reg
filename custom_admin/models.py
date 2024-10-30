@@ -1,8 +1,14 @@
+"""
+module for modesl of admins and audit logs
+"""
+
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
+
+User = get_user_model()
 
 class CustomUser(AbstractUser):
     """Role based admins (users)"""
@@ -17,11 +23,11 @@ class CustomUser(AbstractUser):
     role = models.CharField(max_length=2, choices=ROLE_CHOICES, default=REGULAR_USER)
 
     def is_super_admin(self):
+        """super admin user"""
         return self.role == self.SUPER_ADMIN
     def is_mini_admin(self):
+        """mini admin user"""
         return self.role == self.MINI_ADMIN
-    
-User = get_user_model()
 
 class AuditLog(models.Model):
     """class for auditing and tracking logs"""

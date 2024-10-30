@@ -1,6 +1,7 @@
 """
 module for signals to log changes and deletion
 """
+from threading import local
 
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
@@ -9,8 +10,6 @@ from django.forms.models import model_to_dict
 
 from members.models import Registration
 from .models import AuditLog
-
-from threading import local
 
 def log_change(instance, action, user=None, changes=None):
     """Helper function to create audit log entries"""

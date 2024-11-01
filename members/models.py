@@ -14,7 +14,7 @@ class Registration(models.Model):
         max_length=6, choices=[("Male", "Male"), ("Female", "Female")]
     )
     phone_number = models.CharField(max_length=12, unique=True)
-    email = models.EmailField(unique=True, max_length=255, blank=True, null=True)
+    email = models.EmailField(unique=True, max_length=255, blank=True,null=True)
     residence = models.CharField(max_length=255)
     is_student = models.CharField(max_length=3, choices=[("Yes", "Yes"), ("No", "No")])
     institution_name = models.CharField(max_length=255, blank=True, null=True)

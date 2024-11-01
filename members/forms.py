@@ -31,6 +31,7 @@ class RegistrationForm(forms.ModelForm):
             "last_name",
             "gender",
             "phone_number",
+            "email",
             "residence",
             "is_student",
             "institution_name",
@@ -50,6 +51,8 @@ class RegistrationForm(forms.ModelForm):
             "phone_number": forms.TextInput(
                 attrs={"placeholder": "Phone Number", "class": "form-control"}
             ),
+            'email': forms.EmailInput(
+                attrs={"placeholder": 'Please enter a valid email ', "class": "form-control"}),
             "residence": forms.TextInput(
                 attrs={
                     "placeholder": "This is where you currently live i.e. City, Town, Estate etc.",
@@ -77,6 +80,7 @@ class RegistrationForm(forms.ModelForm):
             "last_name": "",
             "gender": "",
             "phone_number": "",
+            "email": "",
             "residence": "",
             "is_student": "",
             "institution_name": "",

@@ -10,6 +10,13 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.contrib.auth.views import (
+    PasswordResetView,
+    PasswordResetDoneView,
+    PasswordResetConfirmView,
+    PasswordResetCompleteView,
+)
+from django.urls import reverse_lazy
 from django.http import HttpResponseForbidden
 from django.db.models import Count, Q
 from django.db.models.functions import TruncDate
@@ -48,6 +55,54 @@ def logout_view(request):
     """logout view"""
     logout(request)
     return redirect("login")
+
+
+class CustomPasswordResetView(PasswordResetView):
+    """Custom password reset view"""
+
+    template_name = "custom_admin/password_reset_form.html"
+    email_template_name = "custom_admin/password_reset_email.html"
+    success_url = reverse_lazy("password_reset_done")
+
+    def form_valid(self, form):
+        # Log the password reset request
+        AuditLog.objects.create(
+            user=None,  # Since user is not authenticated
+            action="PASSWORD_RESET_REQUEST",
+            ip_address=get_client_ip(self.request),
+            user_agent=self.request.META.get("HTTP_USER_AGENT", ""),
+        )
+        return super().form_valid(form)
+
+
+class CustomPasswordResetDoneView(PasswordResetDoneView):
+    """Custom password reset done view"""
+
+    template_name = "custom_admin/password_reset_done.html"
+
+
+class CustomPasswordResetConfirmView(PasswordResetConfirmView):
+    """Custom password reset confirm view"""
+
+    template_name = "custom_admin/password_reset_confirm.html"
+    success_url = reverse_lazy("password_reset_complete")
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        # Log the successful password reset
+        AuditLog.objects.create(
+            user=self.user,
+            action="PASSWORD_RESET_COMPLETE",
+            ip_address=get_client_ip(self.request),
+            user_agent=self.request.META.get("HTTP_USER_AGENT", ""),
+        )
+        return response
+
+
+class CustomPasswordResetCompleteView(PasswordResetCompleteView):
+    """Custom password reset complete view"""
+
+    template_name = "custom_admin/password_reset_complete.html"
 
 
 @login_required

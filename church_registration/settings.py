@@ -6,6 +6,7 @@ These have been modified to cater for both production and dev mode
 import sys
 import os
 from pathlib import Path
+import certifi
 
 from django.core.management.utils import get_random_secret_key
 from django.contrib.messages import constants as messages
@@ -160,3 +161,15 @@ MESSAGE_TAGS = {
 PHONENUMBER_DEFAULT_REGION = "KE"
 PHONENUMBER_DEFAULT_FORMAT = "INTERNATIONAL"
 PHONENUMBER_DB_FORMAT = "E164"
+
+# Email settings for password reset
+# Uncomment the next line to test on your console
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD")
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER

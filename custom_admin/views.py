@@ -50,7 +50,7 @@ def logout_view(request):
     return redirect("login")
 
 
-@login_required
+#@login_required
 def admin_dashboard(request):
     """view for the admin dashboard with pagination"""
     order_by = request.GET.get("order_by", "-created_at")
@@ -123,15 +123,15 @@ def admin_dashboard(request):
     return render(request, "custom_admin/admin_dashboard.html", context)
 
 
-@login_required
+#@login_required
 def user_list(request):
     """displays list for all users(admins)"""
     users = User.objects.all().order_by("-date_joined")
     return render(request, "custom_admin/user_list.html", {"users": users})
 
 
-@login_required
-@permission_required(is_admin)
+#@login_required
+#@permission_required(is_admin)
 def user_create(request):
     """super user creates admins"""
     if request.method == "POST":
@@ -145,8 +145,8 @@ def user_create(request):
     return render(request, "custom_admin/user_form.html", {"form": form})
 
 
-@login_required
-@permission_required(is_admin)
+#@login_required
+#@permission_required(is_admin)
 def user_edit(request, user_id):
     """super user edits users"""
     user = get_object_or_404(User, id=user_id)
@@ -161,8 +161,8 @@ def user_edit(request, user_id):
     return render(request, "custom_admin/user_form.html", {"form": form})
 
 
-@login_required
-@permission_required(is_super_admin)
+#@login_required
+#@permission_required(is_super_admin)
 def user_deactivate(request, user_id):
     """super user deactivates other users"""
     user = get_object_or_404(User, id=user_id)
@@ -175,7 +175,7 @@ def user_deactivate(request, user_id):
     return redirect("user_list")
 
 
-@login_required
+#@login_required
 def registration_detail(request, registration_id):
     """View for differnent admin registraion details"""
     registration = get_object_or_404(Registration, id=registration_id)

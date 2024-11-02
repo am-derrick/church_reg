@@ -1,8 +1,6 @@
 from django import forms
 from phonenumber_field.formfields import PhoneNumberField
-from phonenumber_field.widgets import PhoneNumberPrefixWidget
 from .models import Registration
-from django.forms.widgets import Select, TextInput
 
 
 class NameForm(forms.Form):
@@ -26,7 +24,7 @@ class RegistrationForm(forms.ModelForm):
     """Registration form utilising Django forms"""
 
     phone_number = PhoneNumberField(
-        required=False,  # Make it optional
+        required=False,
         widget=forms.TextInput(
             attrs={
                 "class": "form-control",
@@ -34,6 +32,7 @@ class RegistrationForm(forms.ModelForm):
                 "style": "width: 100%;",
             }
         ),
+        label="",
     )
 
     def clean_phone_number(self):

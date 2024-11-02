@@ -1,4 +1,5 @@
 from django import forms
+from phonenumber_field.formfields import PhoneNumberField
 from .models import Registration
 
 
@@ -21,6 +22,43 @@ class NameForm(forms.Form):
 
 class RegistrationForm(forms.ModelForm):
     """Registration form utilising Django forms"""
+
+    phone_number = PhoneNumberField(
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                "class": "form-control",
+                "placeholder": "e.g. 0712345678 or +257712345678",
+                "style": "width: 100%;",
+            }
+        ),
+        label="",
+    )
+
+    def clean_phone_number(self):
+        """Custom validation for phone numbers"""
+        phone_number = self.cleaned_data.get("phone_number")
+
+        if not phone_number:
+            return None
+
+        # Convert the phone number to string for manipulation
+        phone_str = str(phone_number)
+
+        # Handle Kenyan numbers
+        if phone_str.startswith("0"):  # Local format (0712345678)
+            phone_str = "+254" + phone_str[1:]
+        elif phone_str.startswith("254"):  # Without plus (254712345678)
+            phone_str = "+" + phone_str
+        elif not phone_str.startswith("+"):  # No country code
+            phone_str = "+254" + phone_str
+
+        try:
+            from phonenumber_field.phonenumber import PhoneNumber
+
+            return PhoneNumber.from_string(phone_str, region="KE")
+        except Exception:
+            raise forms.ValidationError("Please enter a valid phone number")
 
     class Meta:
         """Meta class details[columns]"""
@@ -48,11 +86,12 @@ class RegistrationForm(forms.ModelForm):
                 attrs={"placeholder": "Last Name", "class": "form-control"}
             ),
             "gender": forms.RadioSelect(attrs={"class": "form-check-input"}),
-            "phone_number": forms.TextInput(
-                attrs={"placeholder": "Phone Number", "class": "form-control"}
+            "email": forms.EmailInput(
+                attrs={
+                    "placeholder": "Please enter a valid email ",
+                    "class": "form-control",
+                }
             ),
-            'email': forms.EmailInput(
-                attrs={"placeholder": 'Please enter a valid email ', "class": "form-control"}),
             "residence": forms.TextInput(
                 attrs={
                     "placeholder": "This is where you currently live i.e. City, Town, Estate etc.",

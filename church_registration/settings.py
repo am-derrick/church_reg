@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "members",
     "crispy_forms",
     "crispy_bootstrap4",
+    "phonenumber_field",
 ]
 
 MIDDLEWARE = [
@@ -146,7 +147,7 @@ LOGIN_URL = "/custom_admin/login/"
 # Custom Admins
 AUTH_USER_MODEL = "custom_admin.CustomUser"
 
-# proper Bootstra styling
+# proper Bootstrap styling
 MESSAGE_TAGS = {
     messages.DEBUG: "alert-secondary",
     messages.INFO: "alert-info",
@@ -154,3 +155,8 @@ MESSAGE_TAGS = {
     messages.WARNING: "alert-warning",
     messages.ERROR: "alert-danger",
 }
+
+# Phone number field settings
+PHONENUMBER_DEFAULT_REGION = "KE"
+PHONENUMBER_DEFAULT_FORMAT = "INTERNATIONAL"
+PHONENUMBER_DB_FORMAT = "E164"

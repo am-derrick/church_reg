@@ -36,7 +36,7 @@
                 <input type="hidden" name="is_update" value="{{ is_update|yesno:'True,False' }}">
 
                 <!-- Name Section -->
-                <div class="form-group text-black-50">
+                <div class="form-group text-black">
                     <label class="font-weight-bold ">Name</label>
                     <div class="row">
                         <div class="col-md-6">
@@ -55,7 +55,7 @@
                 </div>
 
                 <!-- Gender Section -->
-                <div class="form-group text-black-50">
+                <div class="form-group text-black">
                     <label class="font-weight-bold">Gender</label>
                     <div>
                         {% for radio in form.gender %}
@@ -74,19 +74,19 @@
                 </div>
 
                 <!-- Phone Section -->
-                <div class="form-group text-black-50">
+                <div class="form-group text-black">
                     <label class="font-weight-bold">Phone Number</label>
                     {{ form.phone_number|as_crispy_field }}
                 </div>
 
-		<!-- Email Section -->
-		<div class="form-group text-black-50">
+                <!-- Email Section -->
+                <div class="form-group text-black">
                     <label class="font-weight-bold">Email Address</label>
                     {{ form.email|as_crispy_field }}
                 </div>
 
                 <!-- Residence -->
-                <div class="form-group text-black-50">
+                <div class="form-group text-black">
                     <label class="font-weight-bold">Residence</label>
                     {{ form.residence|as_crispy_field }}
                     {% if form.residence.errors %}
@@ -95,7 +95,7 @@
                 </div>
 
                 <!-- Student Status -->
-                <div class="form-group text-black-50">
+                <div class="form-group text-black">
                     <label class="font-weight-bold">Are you a Student?</label>
                     <div>
                         {% for radio in form.is_student %}
@@ -114,14 +114,14 @@
                 
                 <!-- Additional fields, hidden initially -->
                 <div id="studentFields" style="display: none;">
-                    <div class="form-group text-black-50">
+                    <div class="form-group text-black">
                         <label class="font-weight-bold">Name of Institution</label>
                         {{ form.institution_name|as_crispy_field }}
                         {% if form.institution_name.errors %}
                             <div class="text-danger">{{ form.institution_name.errors|join:", " }}</div>
                         {% endif %}
                     </div>
-                    <div class="form-group text-black-50">
+                    <div class="form-group text-black">
                         <label class="font-weight-bold">Location of Institution</label>
                         {{ form.institution_location|as_crispy_field }}
                         {% if form.institution_location.errors %}
@@ -132,7 +132,7 @@
 
                 <!-- Occupation -->
                 <div id="occupationField">
-                    <div class="form-group text-black-50">
+                    <div class="form-group text-black">
                         <label class="font-weight-bold">Occupation</label>
                         {{ form.occupation|as_crispy_field }}
                         {% if form.occupation.errors %}
@@ -142,7 +142,7 @@
                 </div>
                 
                 <!-- First Timer -->
-                <div class="form-group text-black-50">
+                <div class="form-group text-black">
                     <label class="font-weight-bold">Is this your first time?</label>
                         <div>
                             {% for radio in form.is_first_time %}
@@ -172,7 +172,8 @@
                             <li>To share your contact details with our teams for experience sharing with the ministry.</li>
                             <li>To use your photograph(s) and video(s) taken during any of our events on our communication materials.</li>
                         </ol>
-                        <div class="form-group">
+                    </div>
+                        <div class="form-group text-black">
                             <label class="font-weight-bold">
                                 I CONSENT to Manifest Kenya holding and using my information and contacting me for the above purposes.
                             </label>
@@ -190,7 +191,6 @@
                                     {% endif %}
                                 </div>
                         </div>
-                    </div>
                     </div>
                     
 
@@ -213,8 +213,6 @@
 </div>
 
 <script src="{% static 'scripts/form_handler.js' %}"></script>
-<script src="{% static 'scripts/number_validator.js' %}"></script>
-
 {% endblock %}
 
 {% block extra_css %}
@@ -222,6 +220,7 @@
     body, html {
         height: 100%;
         margin: 0;
+        font-size: small;
         font-family: "Inter", sans-serif;
         background-color: black;
     }

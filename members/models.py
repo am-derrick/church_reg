@@ -3,6 +3,7 @@ module for Registraion and ServiceAttendance models
 """
 
 from django.db import models
+from phonenumber_field.modelfields import PhoneNumberField
 
 
 class Registration(models.Model):
@@ -13,8 +14,16 @@ class Registration(models.Model):
     gender = models.CharField(
         max_length=6, choices=[("Male", "Male"), ("Female", "Female")]
     )
-    phone_number = models.CharField(max_length=12, unique=True)
-    email = models.EmailField(unique=True, max_length=255, blank=True,null=True)
+    phone_number = PhoneNumberField(
+        unique=True,
+        blank=True,
+        null=True,
+        region="KE",
+        error_messages={
+            "invalid": "Please enter a valid phone number with country code (e.g., +254, +256)",
+        },
+    )
+    email = models.EmailField(unique=True, max_length=255, blank=True, null=True)
     residence = models.CharField(max_length=255)
     is_student = models.CharField(max_length=3, choices=[("Yes", "Yes"), ("No", "No")])
     institution_name = models.CharField(max_length=255, blank=True, null=True)

@@ -186,7 +186,10 @@
                                         <input type="checkbox" class="custom-control-input" id="col_phone_number" name="columns" value="phone_number">
                                         <label class="custom-control-label" for="col_phone_number">Phone Number</label>
                                     </div>
-                                    
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="col_email" name="columns" value="email">
+                                        <label class="custom-control-label" for="col_email">Email</label>
+                                    </div>
                                     <div class="custom-control custom-checkbox">
                                         <input type="checkbox" class="custom-control-input" id="col_institution_name" name="columns" value="institution_name">
                                         <label class="custom-control-label" for="col_institution_name">Institution Name</label>
@@ -275,7 +278,7 @@
                         {% if is_admin %}
                         <td>{{ registration.phone_number }}</td>
                         <td>{{ registration.residence }}</td>
-                        <td>{{ registration.email}}</td>
+                        <td>{{ registration.email|default_if_none:"-" }}</td>
                         {% endif %}
                         <td>{{ registration.is_student }}</td>
                         <td>{{ registration.institution_name|default_if_none:"-" }}</td>

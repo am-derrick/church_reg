@@ -93,7 +93,60 @@
         <h1 class="h3 mb-0">Service Attendance Analytics</h1>
     </div>
 
-    <!-- Filters -->
+    <div class="filters-section export-section">
+        <h5 class="mb-3">Export Service Attendance</h5>
+        <form method="GET" action="{% url 'export_service_attendance' %}" id="export-form">
+            <div class="filters-container">
+                <div class="filter-item">
+                    <label>Attendance Type</label>
+                    <select name="attendance_type" class="form-control">
+                        <option value="">All Attendance Types</option>
+                        <option value="NEW">New Registration</option>
+                        <option value="UPDATE">Details Updated</option>
+                        <option value="CONFIRM">Confirmed Attendance</option>
+                    </select>
+                </div>
+                
+                <div class="filter-item">
+                    <label>Date Range</label>
+                    <input type="text" name="date_range" class="form-control" 
+                           id="export-date-range" 
+                           placeholder="Select export date range">
+                </div>
+                
+                <div class="filter-item">
+                    <label>Select Columns</label>
+                    <div class="column-selection">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" name="columns" value="member__first_name" id="col-first-name">
+                            <label class="form-check-label" for="col-first-name">First Name</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" name="columns" value="member__last_name" id="col-last-name">
+                            <label class="form-check-label" for="col-last-name">Last Name</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" name="columns" value="member__phone_number" id="col-phone-number">
+                            <label class="form-check-label" for="col-phone-number">Phone Number</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" name="columns" value="member__institution_name" id="col-institution-name">
+                            <label class="form-check-label" for="col-institution-name">Institution Name</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="filter-item align-self-end">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-file-export mr-2"></i>Export Data
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- 
+    Filters commented out, to be implemented when charts are included.
     <div class="filters-section">
         <form method="GET" id="filter-form">
             <div class="filters-container">
@@ -109,6 +162,7 @@
             </div>
         </form>
     </div>
+    -->
 
     <!-- Table -->
     {% if error_message %}
@@ -165,4 +219,40 @@
         });
     });
 </script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize flatpickr for export date range
+    flatpickr("#export-date-range", {
+        mode: "range",
+        dateFormat: "d-m-Y",
+        placeholder: "Select export date range"
+    });
+});
+</script>
+
+<style>
+.column-selection {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1rem;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+}
+
+.column-selection .form-check {
+    display: flex;
+    align-items: center;
+    margin: 0;
+}
+
+.column-selection .form-check-input {
+    margin-right: 0.5rem;
+}
+
+.column-selection .form-check-label {
+    font-size: 0.875rem;
+    color: #4a5568;
+}
+</style>
 {% endblock %}

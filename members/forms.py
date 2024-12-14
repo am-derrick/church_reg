@@ -35,6 +35,14 @@ class RegistrationForm(forms.ModelForm):
         label="",
     )
 
+    def __init__(self, *args, **kwargs):
+        self.is_update = kwargs.pop("is_update", False)
+        super().__init__(*args, **kwargs)
+        self.fields["gender"].choices = [("Male", "Male"), ("Female", "Female")]
+        self.fields["is_student"].choices = [("Yes", "Yes"), ("No", "No")]
+        self.fields["is_first_time"].choices = [("Yes", "Yes"), ("No", "No")]
+        self.fields["consent"].choices = [("Yes", "Yes"), ("No", "No")]
+
     def clean_phone_number(self):
         """Custom validation for phone numbers"""
         phone_number = self.cleaned_data.get("phone_number")
@@ -56,9 +64,45 @@ class RegistrationForm(forms.ModelForm):
         try:
             from phonenumber_field.phonenumber import PhoneNumber
 
-            return PhoneNumber.from_string(phone_str, region="KE")
-        except Exception:
-            raise forms.ValidationError("Please enter a valid phone number")
+            cleaned_phone = PhoneNumber.from_string(phone_str, region="KE")
+
+            # For new registrations or if phone number is changing, check for uniqueness
+            if not self.instance.pk or (
+                self.instance.pk
+                and str(cleaned_phone) != str(self.instance.phone_number)
+            ):
+                # Check if phone number is already in use by another registration
+                existing = Registration.objects.filter(phone_number=cleaned_phone)
+                if self.instance.pk:
+                    existing = existing.exclude(pk=self.instance.pk)
+
+                if existing.exists():
+                    raise forms.ValidationError("This phone number is already in use.")
+
+            return cleaned_phone
+
+        except Exception as e:
+            raise forms.ValidationError(f"Please enter a valid phone number: {str(e)}")
+
+    def clean_email(self):
+        """Custom validation for email"""
+        email = self.cleaned_data.get("email")
+
+        # If email is not provided, it's okay
+        if not email:
+            return None
+
+        # For new registrations or if email is changing, check for uniqueness
+        if not self.is_update or (self.instance.pk and email != self.instance.email):
+            # Check if email is already in use by another registration
+            if (
+                Registration.objects.filter(email=email)
+                .exclude(pk=self.instance.pk or None)
+                .exists()
+            ):
+                raise forms.ValidationError("This email is already in use.")
+
+        return email
 
     class Meta:
         """Meta class details[columns]"""
@@ -128,10 +172,3 @@ class RegistrationForm(forms.ModelForm):
             "is_first_time": "",
             "consent": "",
         }
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields["gender"].choices = [("Male", "Male"), ("Female", "Female")]
-        self.fields["is_student"].choices = [("Yes", "Yes"), ("No", "No")]
-        self.fields["is_first_time"].choices = [("Yes", "Yes"), ("No", "No")]
-        self.fields["consent"].choices = [("Yes", "Yes"), ("No", "No")]

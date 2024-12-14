@@ -88,7 +88,7 @@ def registration_confirm(request):
 
             if action == "update":
                 # For updates, always show the form regardless of today's attendance
-                form = RegistrationForm(instance=registration)
+                form = RegistrationForm(instance=registration, is_update=True)
                 return render(
                     request,
                     "members/registration.html",
@@ -110,15 +110,23 @@ def registration_submit(request):
     """Handle registration form submission"""
     if request.method == "POST":
         is_update = request.POST.get("is_update") == "True"
+        first_name = request.POST.get("first_name")
+        last_name = request.POST.get("last_name")
 
         try:
+            # Find the existing registration
+            registration = Registration.objects.get(
+                Q(first_name__iexact=first_name) & Q(last_name__iexact=last_name)
+            )
+
+            # For updates, pass the existing instance
             if is_update:
-                registration = Registration.objects.get(
-                    Q(first_name__iexact=request.POST.get("first_name"))
-                    & Q(last_name__iexact=request.POST.get("last_name"))
+                form = RegistrationForm(
+                    request.POST, instance=registration, is_update=True
                 )
-                form = RegistrationForm(request.POST, instance=registration)
-            form = RegistrationForm(request.POST)
+            else:
+                # For new registration
+                form = RegistrationForm(request.POST)
 
             if form.is_valid():
                 registration = form.save()
@@ -153,13 +161,28 @@ def registration_submit(request):
                     {"form": form, "is_update": is_update},
                 )
 
-        except IntegrityError:
-            messages.info(request, "You've already registered for today's service.")
-            return redirect(
-                reverse(
-                    "welcome", kwargs={"first_name": request.POST.get("first_name")}
+        except Registration.DoesNotExist:
+            # If no existing registration, create a new one
+            form = RegistrationForm(request.POST)
+            if form.is_valid():
+                registration = form.save()
+
+                # Create attendance record
+                ServiceAttendance.objects.create(
+                    member=registration,
+                    attendance_type="NEW",
                 )
-            )
+
+                messages.success(request, "Registration successful!")
+                return redirect(
+                    reverse("welcome", kwargs={"first_name": registration.first_name})
+                )
+            else:
+                return render(
+                    request,
+                    "members/registration.html",
+                    {"form": form, "is_update": False},
+                )
 
     return redirect("register")
 

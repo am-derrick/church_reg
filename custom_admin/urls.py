@@ -28,6 +28,11 @@ urlpatterns = [
         name="export_registrations_csv",
     ),
     path(
+        "export/service-attendance/",
+        export.export_service_attendance_csv,
+        name="export_service_attendance",
+    ),
+    path(
         "registration/<int:registration_id>/",
         views.registration_detail,
         name="registration_detail",

@@ -13,7 +13,7 @@ crispy-bootstrap4==2024.10
 crispy-bootstrap5==2024.2
 distlib==0.3.9
 dj-database-url==2.2.0
-Django==5.1.4
+Django==4.2
 django-crispy-forms==2.3
 django-environ==0.11.2
 django-form-tags==2.1
@@ -54,6 +54,6 @@ sqlparse==0.5.1
 termcolor==1.1.0
 typing_extensions==4.12.2
 tzdata==2024.1
-urllib3==2.2.2
+urllib3>=1.26.5,<2
 virtualenv==20.27.1
 wcwidth==0.1.9

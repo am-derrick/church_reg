@@ -160,6 +160,26 @@
                     <small class="form-text text-muted">Please indicate whether it’s your first time attending the physical livestream.</small>
                 </div>
 
+
+                <!-- Are you In a Manifest Kenya WhatsApp Group -->
+                <div class="form-group text-black">
+                    <label class="font-weight-bold">Are you In a Manifest Kenya WhatsApp Group?</label>
+                        <div>
+                            {% for radio in form.is_in_whatsapp_group %}
+                                <div class="form-check form-check-inline">
+                                    {{ radio.tag }}
+                                    <label class="form-check-label" for="{{ radio.id_for_label }}">
+                                        {{ radio.choice_label }}
+                                    </label>
+                                </div>
+                            {% endfor %}
+                            {% if form.is_in_whatsapp_group.errors %}
+                                <div class="text-danger">{{ form.is_in_whatsapp_group.errors|join:", " }}</div>
+                            {% endif %}
+                        </div>
+                </div>
+                
+
                 <!-- Data Protection Notice & Consent -->
                 <div class="form-group">
                     <h5 class="font-weight-bold">DATA PROTECTION NOTICE</h5>

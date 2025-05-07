@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "custom_admin",
     "members",
+    "events",
     "crispy_forms",
     "crispy_bootstrap4",
     "phonenumber_field",

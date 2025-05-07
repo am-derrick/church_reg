@@ -1,0 +1,154 @@
+{% extends "events/base.html" %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block title %}
+{% if is_update %}Update Your Information{% else %}Registration Form{% endif %} - Manifest Fellowship Kenya{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-column min-vh-100">
+    <div class="bg-black py-2 text-center">
+        <img src="{% static 'images/logo-01.png' %}" alt="Manifest Fellowship Kenya Logo" class="img-fluid" width="200"> 
+    </div>
+    <div class="bg-white flex-grow-1 d-flex flex-column justify-content-between" style="border-radius: 30px 30px 0 0;">
+        <div class="container py-4">
+            <h5 class="font-weight-bold mb-0">
+                {% if is_update %}
+                    Update Your information
+                {% else %}
+                    REGISTRATION FORM
+                {% endif %}
+            </h5>
+            <p class="mb-4 mt-4 text-black-50">
+                This is an online registration form for members who are attending the
+                Physical Livestream Centre for Manifest Kenya, Nairobi.
+            </p>
+
+            {% if form.non_field_errors %}
+                <div class="alert alert-danger">
+                    {% for error in form.non_field_errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+            {% endif %}
+            <form method="post" action="{% url 'events_submit' %}" class="mt-4">
+                {% csrf_token %}
+                <input type="hidden" name="is_update" value="{{ is_update|yesno:'True,False' }}">
+
+                <!-- Name Section -->
+                <div class="form-group text-black">
+                    <label class="font-weight-bold ">Name</label>
+                    <div class="row">
+                        <div class="col-md-6">
+                            {{ form.first_name|as_crispy_field }}
+                            {% if form.first_name.errors %}
+                                <div class="text-danger">{{ form.first_name.errors|join:", " }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-6">
+                            {{ form.last_name|as_crispy_field }}
+                            {% if form.last_name.errors %}
+                                <div class="text-danger">{{ form.last_name.errors|join:", " }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <!-- Phone Section -->
+                <div class="form-group text-black">
+                    <label class="font-weight-bold">Phone Number</label>
+                    {{ form.phone_number|as_crispy_field }}
+                </div>
+                
+                <!-- First Timer -->
+                <div class="form-group text-black">
+                    <label class="font-weight-bold">Is this your first time?</label>
+                        <div>
+                            {% for radio in form.is_first_time %}
+                                <div class="form-check form-check-inline">
+                                    {{ radio.tag }}
+                                    <label class="form-check-label" for="{{ radio.id_for_label }}">
+                                        {{ radio.choice_label }}
+                                    </label>
+                                </div>
+                            {% endfor %}
+                            {% if form.is_first_time.errors %}
+                                <div class="text-danger">{{ form.is_first_time.errors|join:", " }}</div>
+                            {% endif %}
+                        </div>
+                    <small class="form-text text-muted">Please indicate whether it’s your first time attending the physical livestream.</small>
+                </div>
+
+                <!-- Data Protection Notice & Consent -->
+                <div class="form-group">
+                    <h5 class="font-weight-bold">DATA PROTECTION NOTICE</h5>
+                    <div class="text-black-50">
+                        <p>
+                            Manifest Fellowship would like to hold and use the information you have provided in this form for the purposes set out below:
+                        </p>
+                        <ol>
+                            <li>To keep you informed of events, services, and other related communication from the ministry.</li>
+                            <li>To share your contact details with our teams for experience sharing with the ministry.</li>
+                            <li>To use your photograph(s) and video(s) taken during any of our events on our communication materials.</li>
+                        </ol>
+                    </div>
+                        <div class="form-group text-black">
+                            <label class="font-weight-bold">
+                                I CONSENT to Manifest Kenya holding and using my information and contacting me for the above purposes.
+                            </label>
+                                <div>
+                                    {% for radio in form.consent %}
+                                        <div class="form-check form-check-inline">
+                                            {{ radio.tag }}
+                                            <label class="form-check-label" for="{{ radio.id_for_label }}">
+                                                {{ radio.choice_label }}
+                                            </label>
+                                        </div>
+                                    {% endfor %}
+                                    {% if form.consent.errors %}
+                                        <div class="text-danger">{{ form.consent.errors|join:", " }}</div>
+                                    {% endif %}
+                                </div>
+                        </div>
+                    </div>
+                    
+
+                <!-- Submit Button -->
+                    <div class="text-center">
+                    <button type="submit" class="btn btn-lg btn-warning mt-4 font-weight-bold text-white">
+                        {% if is_update %}Update{% else %}Submit{% endif %}
+                    </button>
+                    </div>
+                
+            </form>
+        </div>
+    </div>
+    <footer class="bg-white py-4 text-center">
+        <p class="text-muted mb-0">
+            &copy; <b>{% now "Y" %}</b> Manifest Fellowship Kenya.<br>
+            All rights reserved.
+        </p>
+    </footer>
+</div>
+
+<script src="{% static 'scripts/form_handler.js' %}"></script>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    body, html {
+        height: 100%;
+        margin: 0;
+        font-size: small;
+        font-family: "Inter", sans-serif;
+        background-color: black;
+    }
+    .btn-warning {
+        background-color: #f79d22;
+        border-color: #f79d22;
+    }
+    .text-danger {
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+    }
+</style>
+{% endblock %}

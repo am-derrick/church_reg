@@ -14,6 +14,10 @@ import dj_database_url
 
 from dotenv import load_dotenv
 
+
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
+BASE_DIR = Path(__file__).resolve().parent.parent
+
 load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -27,9 +31,13 @@ DEBUG = os.getenv("DEBUG", "False") == "True"
 
 ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "127.0.0.1,localhost").split(",")
 
-# Connect to a local SQLite database for testing or Postgres on Production
-DEVELOPMENT_MODE = os.getenv("DEVELOPMENT_MODE", "False") == "True"
 
+# Connect to a local SQLite database for testing
+# DEVELOPMENT_MODE = os.getenv("DEVELOPMENT_MODE", "False") == "True"
+
+
+DEVELOPMENT_MODE = True
+DEBUG = True
 # Application definition
 
 INSTALLED_APPS = [

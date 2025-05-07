@@ -163,9 +163,9 @@
 
                 <!-- Are you In a Manifest Kenya WhatsApp Group -->
                 <div class="form-group text-black">
-                    <label class="font-weight-bold">Are you In a Manifest Kenya WhatsApp Group?</label>
+                    <label class="font-weight-bold">Would you like to be added to the Whatsapp Group?</label>
                         <div>
-                            {% for radio in form.is_in_whatsapp_group %}
+                            {% for radio in form.join_whatsapp_group %}
                                 <div class="form-check form-check-inline">
                                     {{ radio.tag }}
                                     <label class="form-check-label" for="{{ radio.id_for_label }}">
@@ -173,12 +173,12 @@
                                     </label>
                                 </div>
                             {% endfor %}
-                            {% if form.is_in_whatsapp_group.errors %}
-                                <div class="text-danger">{{ form.is_in_whatsapp_group.errors|join:", " }}</div>
+                            {% if form.join_whatsapp_group %}
+                                <div class="text-danger">{{ form.is_first_time.errors|join:", " }}</div>
                             {% endif %}
                         </div>
-                </div>
-                
+                    <small class="form-text text-muted">This will enable you to recieve sermons, daily devotionals and timely updates from the ministry.</small>
+                </div>                 
 
                 <!-- Data Protection Notice & Consent -->
                 <div class="form-group">

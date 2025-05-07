@@ -32,7 +32,7 @@ class Registration(models.Model):
     is_first_time = models.CharField(
         max_length=3, choices=[("Yes", "Yes"), ("No", "No")]
     )
-    is_in_whatsapp_group = models.CharField(
+    join_whatsapp_group = models.CharField(
         max_length=3, choices=[("Yes", "Yes"), ("No", "No")]
     )
     consent = models.CharField(max_length=3, choices=[("Yes", "Yes"), ("No", "No")])

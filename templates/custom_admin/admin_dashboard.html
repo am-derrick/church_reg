@@ -264,6 +264,7 @@
                         <th>Institution Location</th>
                         <th>Occupation</th>
                         <th>First Time</th>
+                        <th>Group Consent</th>
                         <th>Consent</th>
                         <th>Created At</th>
                         <th>Last Updated</th>
@@ -286,6 +287,7 @@
                         <td>{{ registration.occupation|default_if_none:"-" }}</td>
                         <td>{{ registration.is_first_time}}</td>
                         <td>{{ registration.consent }}</td>
+                        <td>{{ registration.group_consent }}</td>
                         <td>{{ registration.created_at|date:"d-m-Y H:i" }}</td>
                         <td>{{ registration.last_updated|date:"d-m-Y H:i" }}</td>
                         <td>

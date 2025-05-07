@@ -50,7 +50,7 @@ def login_view(request):
     return render(request, "custom_admin/login.html")
 
 
-@login_required
+#@login_required
 def logout_view(request):
     """logout view"""
     logout(request)
@@ -105,7 +105,7 @@ class CustomPasswordResetCompleteView(PasswordResetCompleteView):
     template_name = "custom_admin/password_reset_complete.html"
 
 
-@login_required
+#@login_required
 def admin_dashboard(request):
     """view for the admin dashboard with pagination"""
     order_by = request.GET.get("order_by", "-created_at")
@@ -178,7 +178,7 @@ def admin_dashboard(request):
     return render(request, "custom_admin/admin_dashboard.html", context)
 
 
-@login_required
+#@login_required
 def user_list(request):
     """displays list for all users(admins)"""
     users = User.objects.all().order_by("-date_joined")
@@ -230,7 +230,7 @@ def user_deactivate(request, user_id):
     return redirect("user_list")
 
 
-@login_required
+#@login_required
 def registration_detail(request, registration_id):
     """View for differnent admin registraion details"""
     registration = get_object_or_404(Registration, id=registration_id)
@@ -249,7 +249,7 @@ def registration_detail(request, registration_id):
     return render(request, "custom_admin/registration_detail.html", context)
 
 
-@login_required
+#@login_required
 @permission_required(is_super_admin)
 def delete_registration(request, registration_id):
     """Delete registration entry, available for only super admin"""
@@ -292,7 +292,7 @@ def attendance_analytics(request):
         return render(request, "custom_admin/analytics.html", context)
 
 
-@login_required
+#@login_required
 @permission_required(is_super_admin)
 def audit_log_view(request):
     """View for displaying audit logs with filters"""

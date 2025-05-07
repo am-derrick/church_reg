@@ -196,10 +196,20 @@
                     </div>
 
                     <div class="detail-item">
+                        <div class="detail-label">Group Consent Given</div>
+                        <div class="detail-value">
+                            <span class="status-indicator {% if registration.group_consent %}status-yes{% else %}status-no{% endif %}">
+                                {{ registration.group_consent|yesno:"Yes,No" }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="detail-item">
                         <div class="detail-label">Created At</div>
                         <div class="detail-value">{{ registration.created_at|date:"d-m-Y H:i" }}</div>
                     </div>
 
+        
                     <div class="detail-item">
                         <div class="detail-label">Last Updated</div>
                         <div class="detail-value">{{ registration.last_updated|date:"d-m-Y H:i" }}</div>

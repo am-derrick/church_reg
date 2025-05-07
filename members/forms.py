@@ -41,7 +41,7 @@ class RegistrationForm(forms.ModelForm):
         self.fields["gender"].choices = [("Male", "Male"), ("Female", "Female")]
         self.fields["is_student"].choices = [("Yes", "Yes"), ("No", "No")]
         self.fields["is_first_time"].choices = [("Yes", "Yes"), ("No", "No")]
-        self.fields["whatsapp_group"].choices = [("Yes", "Yes"), ("No", "No")]
+        self.fields["join_whatsapp_group"].choices = [("Yes", "Yes"), ("No", "No")]
         self.fields["consent"].choices = [("Yes", "Yes"), ("No", "No")]
 
     def clean_phone_number(self):
@@ -121,6 +121,7 @@ class RegistrationForm(forms.ModelForm):
             "institution_location",
             "occupation",
             "is_first_time",
+            "join_whatsapp_group",
             "consent",
         ]
         widgets = {
@@ -158,6 +159,8 @@ class RegistrationForm(forms.ModelForm):
             ),
             "is_first_time": forms.RadioSelect(attrs={"class": "form-check-input"}),
             "consent": forms.RadioSelect(attrs={"class": "form-check-input"}),
+            "join_whatsapp_group": forms.RadioSelect(attrs={"class": "form-check-input"}
+            ),
         }
         labels = {
             "first_name": "",
@@ -172,4 +175,5 @@ class RegistrationForm(forms.ModelForm):
             "occupation": "",
             "is_first_time": "",
             "consent": "",
+            "join_whatsapp_group": "",
         }

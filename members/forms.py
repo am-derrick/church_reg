@@ -177,3 +177,53 @@ class RegistrationForm(forms.ModelForm):
             "consent": "",
             "join_whatsapp_group": "",
         }
+
+
+class EventRegistrationForm(forms.ModelForm):
+    """Event Registration form utilising Django forms"""
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["is_first_time"].choices = [("Yes", "Yes"), ("No", "No")]
+        self.fields["join_whatsapp_group"].choices = [("Yes", "Yes"), ("No", "No")]
+        self.fields["consent"].choices = [("Yes", "Yes"), ("No", "No")]
+
+    class Meta:
+        """Meta class details[columns]"""
+
+        model = Registration
+        fields = [
+        "first_name",
+        "last_name",
+        "phone_number",
+        "is_first_time",
+        "join_whatsapp_group",
+        "consent",
+
+        ]
+        widgets = {
+            "first_name": forms.TextInput(
+                attrs={"placeholder": "First Name", "class": "form-control"}
+            ),
+            "last_name": forms.TextInput(
+                attrs={"placeholder": "Last Name", "class": "form-control"}
+            ),
+            "phone_number": forms.TextInput(
+                attrs={
+                    "placeholder": "e.g. 0712345678 or +254712345678",
+                    "class": "form-control",
+                }
+            ),
+            "is_first_time": forms.RadioSelect(attrs={"class": "form-check-input"}),
+            "join_whatsapp_group": forms.RadioSelect(attrs={"class": "form-check-input"}),
+            "consent": forms.RadioSelect(attrs={"class": "form-check-input"}),
+            
+        }
+        labels = {
+            "first_name": "",
+            "last_name": "",
+            "phone_number": "",
+            "is_first_time": "",
+            "join_whatsapp_group": "",
+            "consent": "",
+        }

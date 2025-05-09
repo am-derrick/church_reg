@@ -123,7 +123,7 @@
     const navType = performance.getEntriesByType("navigation")[0].type;
     if (navType === "reload") {
         const origin = "{{ origin }}";
-        const redirectUrl = origin === "events" ? "{% url 'events_register_view' %}" : "{% url 'register' %}";
+        const redirectUrl = origin === 'events' ? "{% url 'events' %}" : "{% url 'register' %}";
         window.location.href = redirectUrl;
     }
 </script>

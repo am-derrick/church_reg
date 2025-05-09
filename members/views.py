@@ -235,70 +235,70 @@ def events_submit(request):
         first_name = request.POST.get("first_name")
         last_name = request.POST.get("last_name")
 
-    try:
-        # Find the existing registration
-        registration = Registration.objects.get(
-            Q(first_name__iexact=first_name) & Q(last_name__iexact=last_name)
-        )
-        # For updates, pass the existing instance
-        if is_update:
-            form = EventRegistrationForm(
-                request.POST, instance=registration, is_update=True
+        try:
+            # Find the existing registration
+            registration = Registration.objects.get(
+                Q(first_name__iexact=first_name) & Q(last_name__iexact=last_name)
             )
-        else:
-            # For new registration
+            # For updates, pass the existing instance
+            if is_update:
+                form = EventRegistrationForm(
+                    request.POST, instance=registration, is_update=True
+                )
+            else:
+                # For new registration
+                form = EventRegistrationForm(request.POST)
+            if form.is_valid():
+                registration = form.save()
+
+                # Check if already registered today
+                today = date.today()
+                existing_attendance = ServiceAttendance.objects.filter(
+                    member=registration, service_date=today
+                ).exists()
+
+                if not existing_attendance:
+                    ServiceAttendance.objects.create(
+                        member=registration,
+                        attendance_type="UPDATE" if is_update else "NEW",
+                    )
+                messages.success(
+                    request,
+                    (
+                        "Registration updated successfully!"
+                        if is_update
+                        else "Registration successful!"
+                    ),
+                )
+                return redirect(
+                    reverse("welcome", kwargs={"first_name": registration.first_name})
+                )
+            else:
+                return render(
+                    request,
+                    "members/events_registration.html",
+                    {"form": form, "is_update": is_update},
+                )
+        except Registration.DoesNotExist:
+            # If no existing registration, create a new one
             form = EventRegistrationForm(request.POST)
-        if form.is_valid():
-            registration = form.save()
+            if form.is_valid():
+                registration = form.save()
 
-            # Check if already registered today
-            today = date.today()
-            existing_attendance = ServiceAttendance.objects.filter(
-                member=registration, service_date=today
-            ).exists()
-
-            if not existing_attendance:
+                # Create attendance record
                 ServiceAttendance.objects.create(
                     member=registration,
-                    attendance_type="UPDATE" if is_update else "NEW",
+                    attendance_type="NEW",
                 )
-            messages.success(
-                request,
-                (
-                    "Registration updated successfully!"
-                    if is_update
-                    else "Registration successful!"
-                ),
-            )
-            return redirect(
-                reverse("welcome", kwargs={"first_name": registration.first_name})
-            )
-        else:
-            return render(
-                request,
-                "members/events_registration.html",
-                {"form": form, "is_update": is_update},
-            )
-    except Registration.DoesNotExist:
-        # If no existing registration, create a new one
-        form = EventRegistrationForm(request.POST)
-        if form.is_valid():
-            registration = form.save()
 
-            # Create attendance record
-            ServiceAttendance.objects.create(
-                member=registration,
-                attendance_type="NEW",
-            )
-
-            messages.success(request, "Registration successful!")
-            return redirect(
-                reverse("welcome", kwargs={"first_name": registration.first_name})
-            )
-        else:
-            return render(
-                request,
-                "members/events_registration.html",
-                {"form": form, "is_update": False},
-            )
+                messages.success(request, "Registration successful!")
+                return redirect(
+                    reverse("welcome", kwargs={"first_name": registration.first_name})
+                )
+            else:
+                return render(
+                    request,
+                    "members/events_registration.html",
+                    {"form": form, "is_update": False},
+                )
     return redirect("events_register_view")

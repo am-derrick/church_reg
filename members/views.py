@@ -8,7 +8,7 @@ from django.urls import reverse
 from django.db.models import Q
 from django.db import IntegrityError
 from django.contrib import messages
-from .forms import RegistrationForm, NameForm
+from .forms import RegistrationForm, NameForm, EventRegistrationForm
 from .models import Registration, ServiceAttendance
 
 
@@ -194,3 +194,111 @@ def welcome_view(request, first_name):
         "members/welcome.html",
         {"first_name": first_name, "messages": messages.get_messages(request)},
     )
+
+
+def events_register_view    (request):
+    """View for events registration"""
+    if request.method == "POST":
+        Events_form = NameForm(request.POST)
+        if Events_form.is_valid():
+            first_name = Events_form.cleaned_data["first_name"]
+            last_name = Events_form.cleaned_data["last_name"]
+
+            # Check if name exists in the db
+            registration_data = Registration.objects.filter(
+                Q(first_name__iexact=first_name) & Q(last_name__iexact=last_name)
+            )
+
+            if registration_data.exists():
+                # If name exists, render the confirmation page
+                return render(
+                    request,
+                    "members/name_confirmation.html",
+                    {"first_name": first_name, "last_name": last_name},
+                )
+            
+            else:
+                # If name doesn't exist, show the full events registration form
+                form = EventRegistrationForm(
+                    initial={"first_name": first_name, "last_name": last_name}
+                )
+                return render(request, "members/events_registration.html", {"form": form})
+    else:
+        form = NameForm()
+    return render(request, "members/name_form.html", {"form": form})
+
+
+def events_submit(request):
+    """Handle events registration form submission"""
+    if request.method == "POST":
+        is_update = request.POST.get("is_update") == "True"
+        first_name = request.POST.get("first_name")
+        last_name = request.POST.get("last_name")
+
+    try:
+        # Find the existing registration
+        registration = Registration.objects.get(
+            Q(first_name__iexact=first_name) & Q(last_name__iexact=last_name)
+        )
+        # For updates, pass the existing instance
+        if is_update:
+            form = EventRegistrationForm(
+                request.POST, instance=registration, is_update=True
+            )
+        else:
+            # For new registration
+            form = EventRegistrationForm(request.POST)
+        if form.is_valid():
+            registration = form.save()
+
+            # Check if already registered today
+            today = date.today()
+            existing_attendance = ServiceAttendance.objects.filter(
+                member=registration, service_date=today
+            ).exists()
+
+            if not existing_attendance:
+                ServiceAttendance.objects.create(
+                    member=registration,
+                    attendance_type="UPDATE" if is_update else "NEW",
+                )
+            messages.success(
+                request,
+                (
+                    "Registration updated successfully!"
+                    if is_update
+                    else "Registration successful!"
+                ),
+            )
+            return redirect(
+                reverse("welcome", kwargs={"first_name": registration.first_name})
+            )
+        else:
+            return render(
+                request,
+                "members/events_registration.html",
+                {"form": form, "is_update": is_update},
+            )
+    except Registration.DoesNotExist:
+        # If no existing registration, create a new one
+        form = EventRegistrationForm(request.POST)
+        if form.is_valid():
+            registration = form.save()
+
+            # Create attendance record
+            ServiceAttendance.objects.create(
+                member=registration,
+                attendance_type="NEW",
+            )
+
+            messages.success(request, "Registration successful!")
+            return redirect(
+                reverse("welcome", kwargs={"first_name": registration.first_name})
+            )
+        else:
+            return render(
+                request,
+                "members/events_registration.html",
+                {"form": form, "is_update": False},
+            )
+    return redirect("events_register_view")

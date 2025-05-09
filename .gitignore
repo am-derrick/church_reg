@@ -43,6 +43,9 @@ ipython_config.py
 env/
 venv/
 
+# Django migrations
+migrations/
+
 # mkdocs documentation
 /site
 
@@ -76,3 +79,7 @@ package.json
 # vscode files
 .vscode/
 .DS_Store
+
+# Django Migrations
+*/migrations/*
+!*/migrations/__init__.py

@@ -32,6 +32,9 @@ class Registration(models.Model):
     is_first_time = models.CharField(
         max_length=3, choices=[("Yes", "Yes"), ("No", "No")]
     )
+    join_whatsapp_group = models.CharField(
+        max_length=3, choices=[("Yes", "Yes"), ("No", "No")]
+    )
     consent = models.CharField(max_length=3, choices=[("Yes", "Yes"), ("No", "No")])
     created_at = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)

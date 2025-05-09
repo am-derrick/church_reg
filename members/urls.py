@@ -10,4 +10,7 @@ urlpatterns = [
     path("register/confirm/", views.registration_confirm, name="registration_confirm"),
     path("register/submit/", views.registration_submit, name="registration_submit"),
     path("welcome/<str:first_name>/", views.welcome_view, name="welcome"),
+
+    path("events/", views.events_register_view, name="events_register_view"),
+    path("events/submit/", views.events_submit, name="events_submit"),
 ]

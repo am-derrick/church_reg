@@ -31,7 +31,7 @@
                     {% endfor %}
                 </div>
             {% endif %}
-            <form method="post" action="{% url 'registration_submit' %}" class="mt-4">
+            <form method="post" action="{% url 'events_submit' %}" class="mt-4">
                 {% csrf_token %}
                 <input type="hidden" name="is_update" value="{{ is_update|yesno:'True,False' }}">
 
@@ -54,92 +54,11 @@
                     </div>
                 </div>
 
-                <!-- Gender Section -->
-                <div class="form-group text-black">
-                    <label class="font-weight-bold">Gender</label>
-                    <div>
-                        {% for radio in form.gender %}
-                            <div class="form-check form-check-inline">
-                                {{ radio.tag }}
-                                <label class="form-check-label" for="{{ radio.id_for_label }}">
-                                    {{ radio.choice_label }}
-                                </label>
-                            </div>
-                        {% endfor %}
-                        {% if form.gender.errors %}
-                            <div class="text-danger">{{ form.gender.errors|join:", " }}</div>
-                        {% endif %}
-                    </div>
-                    
-                </div>
-
                 <!-- Phone Section -->
                 <div class="form-group text-black">
                     <label class="font-weight-bold">Phone Number</label>
                     {{ form.phone_number|as_crispy_field }}
-                </div>
-
-                <!-- Email Section -->
-                <div class="form-group text-black">
-                    <label class="font-weight-bold">Email Address</label>
-                    {{ form.email|as_crispy_field }}
-                </div>
-
-                <!-- Residence -->
-                <div class="form-group text-black">
-                    <label class="font-weight-bold">Residence</label>
-                    {{ form.residence|as_crispy_field }}
-                    {% if form.residence.errors %}
-                        <div class="text-danger">{{ form.residence.errors|join:", " }}</div>
-                    {% endif %}
-                </div>
-
-                <!-- Student Status -->
-                <div class="form-group text-black">
-                    <label class="font-weight-bold">Are you a Student?</label>
-                    <div>
-                        {% for radio in form.is_student %}
-                            <div class="form-check form-check-inline">
-                                {{ radio.tag }}
-                                <label class="form-check-label" for="{{ radio.id_for_label }}">
-                                    {{ radio.choice_label }}
-                                </label>
-                            </div>
-                        {% endfor %}
-                        {% if form.is_student.errors %}
-                            <div class="text-danger">{{ form.is_student.errors|join:", " }}</div>
-                        {% endif %}
-                    </div>
-                </div>
-                
-                <!-- Additional fields, hidden initially -->
-                <div id="studentFields" style="display: none;">
-                    <div class="form-group text-black">
-                        <label class="font-weight-bold">Name of Institution</label>
-                        {{ form.institution_name|as_crispy_field }}
-                        {% if form.institution_name.errors %}
-                            <div class="text-danger">{{ form.institution_name.errors|join:", " }}</div>
-                        {% endif %}
-                    </div>
-                    <div class="form-group text-black">
-                        <label class="font-weight-bold">Location of Institution</label>
-                        {{ form.institution_location|as_crispy_field }}
-                        {% if form.institution_location.errors %}
-                            <div class="text-danger">{{ form.institution_location.errors|join:", " }}</div>
-                        {% endif %}
-                    </div>
-                </div>
-
-                <!-- Occupation -->
-                <div id="occupationField">
-                    <div class="form-group text-black">
-                        <label class="font-weight-bold">Occupation</label>
-                        {{ form.occupation|as_crispy_field }}
-                        {% if form.occupation.errors %}
-                            <div class="text-danger">{{ form.occupation.errors|join:", " }}</div>
-                        {% endif %}
-                    </div>
-                </div>
+                </div>                
                 
                 <!-- First Timer -->
                 <div class="form-group text-black">

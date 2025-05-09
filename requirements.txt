@@ -2,6 +2,7 @@ asgiref==3.8.1
 beautifulsoup4==4.12.3
 black==24.10.0
 blessed==1.20.0
+botocore==1.38.10
 bs4==0.0.2
 cement==2.8.2
 certifi==2024.7.4
@@ -13,7 +14,7 @@ crispy-bootstrap4==2024.10
 crispy-bootstrap5==2024.2
 distlib==0.3.9
 dj-database-url==2.2.0
-Django==5.1.4
+Django==5.2
 django-crispy-forms==2.3
 django-environ==0.11.2
 django-form-tags==2.1
@@ -51,6 +52,7 @@ semantic-version==2.8.5
 six==1.16.0
 soupsieve==2.5
 sqlparse==0.5.1
+stripe==10.7.0
 termcolor==1.1.0
 typing_extensions==4.12.2
 tzdata==2024.1

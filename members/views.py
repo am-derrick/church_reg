@@ -30,7 +30,11 @@ def registration_view(request):
                 return render(
                     request,
                     "members/name_confirmation.html",
-                    {"first_name": first_name, "last_name": last_name},
+                    {
+                        "first_name": first_name,
+                        "last_name": last_name,
+                        "form_type": "register"
+                    },
                 )
             else:
                 # If name doesn't exist, show the full registration form
@@ -76,7 +80,7 @@ def registration_confirm(request):
                         f"Welcome back {first_name}! You've already registered for today's service.",
                     )
                     return redirect(
-                        reverse("welcome", kwargs={"first_name": first_name})
+                        reverse("welcome", kwargs={"first_name": first_name}) + "?origin=register"
                     )
 
                 # Create new attendance record for confirmation
@@ -217,7 +221,11 @@ def events_register_view(request):
                 return render(
                     request,
                     "members/name_confirmation.html",
-                    {"first_name": first_name, "last_name": last_name},
+                    {
+                        "first_name": first_name,
+                        "last_name": last_name,
+                        "form_type": "events"
+                    },
                 )
             
             else:
@@ -304,4 +312,67 @@ def events_submit(request):
                     "members/events_registration.html",
                     {"form": form, "is_update": False},
                 )
-    return redirect("events_register_view")
+    return redirect("events")
+
+
+def events_confirm(request):
+    """Confirm existing registration or create new one during events"""
+    if request.method == "POST":
+        action = request.POST.get("action")
+        first_name = request.POST.get("first_name")
+        last_name = request.POST.get("last_name")
+
+        # Handle new event registration action first
+        if action == "new":
+            form = EventRegistrationForm(
+                initial={"first_name": first_name, "last_name": last_name}
+            )
+            return render(request, "members/events_registration.html", {"form": form})
+
+        try:
+            registration = Registration.objects.get(
+                Q(first_name__iexact=first_name) & Q(last_name__iexact=last_name)
+            )
+
+            # Handle different actions
+            if action == "confirm":
+                # Check if already registered today only for confirmations
+                today = date.today()
+                existing_attendance = ServiceAttendance.objects.filter(
+                    member=registration, service_date=today
+                ).exists()
+
+                if existing_attendance:
+                    messages.info(
+                        request,
+                        f"Welcome back {first_name}! You've already registered for today's service.",
+                    )
+                    return redirect(
+                        reverse("welcome", kwargs={"first_name": first_name}) + "?origin=events"
+                    )
+
+                # Create new attendance record for confirmation
+                ServiceAttendance.objects.create(
+                    member=registration, attendance_type="CONFIRM"
+                )
+                messages.success(request, "Thank you for confirming your attendance!")
+                return redirect(reverse("welcome", kwargs={"first_name": first_name}) + "?origin=events")
+
+            if action == "update":
+                # For updates, always show the form regardless of today's attendance
+                form = EventRegistrationForm(instance=registration, is_update=True)
+                return render(
+                    request,
+                    "members/events_registration.html",
+                    {"form": form, "is_update": True},
+                )
+
+        except Registration.DoesNotExist:
+            # Handle case where registration doesn't exist
+            messages.warning(request, "Registration not found. Please register as new.")
+            form = EventRegistrationForm(
+                initial={"first_name": first_name, "last_name": last_name}
+            )
+            return render(request, "members/events_registration.html", {"form": form})
+
+    return redirect("events")

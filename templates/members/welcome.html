@@ -119,10 +119,12 @@
     });
 </script>
 <script>
-    // Check if the page is being reloaded or refreshed
-    if (window.performance.navigation.type === 1) {
-        // Redirect to the registration page on refresh
-        window.location.href = "{% url 'register' %}";
+    // Check if the page is being reloaded or refreshed and redirect to register or events page
+    const navType = performance.getEntriesByType("navigation")[0].type;
+    if (navType === "reload") {
+        const origin = "{{ origin }}";
+        const redirectUrl = origin === "events" ? "{% url 'events_register_view' %}" : "{% url 'register' %}";
+        window.location.href = redirectUrl;
     }
 </script>
 {% endblock %}

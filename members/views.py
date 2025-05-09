@@ -84,7 +84,7 @@ def registration_confirm(request):
                     member=registration, attendance_type="CONFIRM"
                 )
                 messages.success(request, "Thank you for confirming your attendance!")
-                return redirect(reverse("welcome", kwargs={"first_name": first_name}))
+                return redirect(reverse("welcome", kwargs={"first_name": first_name}) + "?origin=register")
 
             if action == "update":
                 # For updates, always show the form regardless of today's attendance
@@ -152,7 +152,7 @@ def registration_submit(request):
                     ),
                 )
                 return redirect(
-                    reverse("welcome", kwargs={"first_name": registration.first_name})
+                    reverse("welcome", kwargs={"first_name": registration.first_name}) + "?origin=register"
                 )
             else:
                 return render(
@@ -175,7 +175,7 @@ def registration_submit(request):
 
                 messages.success(request, "Registration successful!")
                 return redirect(
-                    reverse("welcome", kwargs={"first_name": registration.first_name})
+                    reverse("welcome", kwargs={"first_name": registration.first_name}) + "?origin=register"
                 )
             else:
                 return render(
@@ -189,14 +189,17 @@ def registration_submit(request):
 
 def welcome_view(request, first_name):
     """Thank you page view, displayed after registration"""
+    origin = request.GET.get("origin", "register") # defualt origin 'register'
     return render(
         request,
         "members/welcome.html",
-        {"first_name": first_name, "messages": messages.get_messages(request)},
+        {"first_name": first_name,
+         "origin": origin,
+         "messages": messages.get_messages(request)},
     )
 
 
-def events_register_view    (request):
+def events_register_view(request):
     """View for events registration"""
     if request.method == "POST":
         Events_form = NameForm(request.POST)
@@ -271,7 +274,7 @@ def events_submit(request):
                     ),
                 )
                 return redirect(
-                    reverse("welcome", kwargs={"first_name": registration.first_name})
+                    reverse("welcome", kwargs={"first_name": registration.first_name}) + "?origin=events"
                 )
             else:
                 return render(
@@ -293,7 +296,7 @@ def events_submit(request):
 
                 messages.success(request, "Registration successful!")
                 return redirect(
-                    reverse("welcome", kwargs={"first_name": registration.first_name})
+                    reverse("welcome", kwargs={"first_name": registration.first_name}) + "?origin=events"
                 )
             else:
                 return render(

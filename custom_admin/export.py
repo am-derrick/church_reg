@@ -65,7 +65,7 @@ def export_registrations_csv(request):
         "is_student": "Student",
         "institution_name": "Institution Name",
         "institution_location": "Institution Location",
-        "group_consent": "Group Consent",
+        "join_whatsapp_group": "Group Consent",
         "occupation": "Occupation",
         "is_first_time": "First Time",
         "consent": "Consent",
@@ -154,7 +154,7 @@ def export_service_attendance_csv(request):
         "member__residence": "Residence",
         "member__is_student": "Student",
         "member__institution_name": "Institution Name",
-        "group__consent": "Group Consent",
+        "member__join_whatsapp_group": "Group Consent",
         "member__occupation": "Occupation",
     }
 

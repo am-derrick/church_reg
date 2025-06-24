@@ -15,7 +15,6 @@ class Registration(models.Model):
         max_length=6, choices=[("Male", "Male"), ("Female", "Female")]
     )
     phone_number = PhoneNumberField(
-        unique=True,
         blank=True,
         null=True,
         region="KE",
@@ -33,7 +32,7 @@ class Registration(models.Model):
         max_length=3, choices=[("Yes", "Yes"), ("No", "No")]
     )
     join_whatsapp_group = models.CharField(
-        max_length=3, choices=[("Yes", "Yes"), ("No", "No")]
+        max_length=3, choices=[("Yes", "Yes"), ("No", "No"), ("nil", "nil")],
     )
     consent = models.CharField(max_length=3, choices=[("Yes", "Yes"), ("No", "No")])
     created_at = models.DateTimeField(auto_now_add=True)

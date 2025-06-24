@@ -68,17 +68,17 @@ class RegistrationForm(forms.ModelForm):
             cleaned_phone = PhoneNumber.from_string(phone_str, region="KE")
 
             # For new registrations or if phone number is changing, check for uniqueness
-            if not self.instance.pk or (
-                self.instance.pk
-                and str(cleaned_phone) != str(self.instance.phone_number)
-            ):
-                # Check if phone number is already in use by another registration
-                existing = Registration.objects.filter(phone_number=cleaned_phone)
-                if self.instance.pk:
-                    existing = existing.exclude(pk=self.instance.pk)
-
-                if existing.exists():
-                    raise forms.ValidationError("This phone number is already in use.")
+            #if not self.instance.pk or (
+            #    self.instance.pk
+            #    and str(cleaned_phone) != str(self.instance.phone_number)
+            #):
+            #    # Check if phone number is already in use by another registration
+            #    existing = Registration.objects.filter(phone_number=cleaned_phone)
+            #    if self.instance.pk:
+            #        existing = existing.exclude(pk=self.instance.pk)
+#
+            #    if existing.exists():
+            #        raise forms.ValidationError("This phone number is already in use.")
 
             return cleaned_phone
 
